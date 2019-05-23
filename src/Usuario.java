@@ -6,12 +6,24 @@ public class Usuario {
     private ArrayList<Livro> livrosProprios, livrosPegos;
 
     public Usuario() {
+        id = 0;
+        nome = "";
         livrosProprios = new ArrayList<>();
         livrosPegos = new ArrayList<>();
     }
 
-    public Usuario(String nome) {
+    public Usuario(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
+        livrosProprios = new ArrayList<>();
+        livrosPegos = new ArrayList<>();
+    }
 
+    public Usuario(int id, String nome, ArrayList<Livro> livrosProprios, ArrayList<Livro> livrosPegos) {
+        this.id = id;
+        this.nome = nome;
+        this.livrosProprios = livrosProprios;
+        this.livrosPegos = livrosPegos;
     }
 
     public void addLivroProprio(Livro livro) {

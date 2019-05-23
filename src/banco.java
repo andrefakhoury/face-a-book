@@ -19,10 +19,10 @@ public class banco {
         bdJogoCod = ""; bdJogoCodProd = ""; bdJogoNome = ""; bdJogoPreco = ""; bdJogoFoto = "";
         fsql = "";
         con = null;
-        usuario = "postgres";
-        senha = "sqladmin";
+        usuario = "fakhoury";
+        senha = "fakhoury";
         drive = "org.postgresql.Driver";
-        url = "jdbc:postgresql://localhost:5432/jogo_castrin";
+        url = "jdbc:postgresql://localhost:5432/face_a_book";
     }
 
     public void setProdCod(String x) { this.bdProdCod = x; }
@@ -127,6 +127,7 @@ public class banco {
             JOptionPane.showMessageDialog(null, "Erro na conexão: "+ ex);
         }
     }
+
     public void disconnect () {
         try {
             con.close();

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.xml.catalog.Catalog;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +30,75 @@ public class ConexaoBanco {
 
     public ConexaoBanco() {
         con = null;
-        usuario = "postgres";
-        senha = "sqladmin";
+        usuario = "fakhoury";
+        senha = "fakhoury";
         drive = "org.postgresql.Driver";
-        url = "jdbc:postgresql://localhost:5432/jogo_castrin";
+        url = "jdbc:postgresql://localhost:5432/face_a_book";
     }
 
-    public Livro getLivro() {
-        return new Livro(1, "aaa", new Categoria(1, "abacaba"));
+    public void test() {
+        String fsql;
+
+
+
+
+        fsql = "insert into categoria (nome) values (?)";
+        try {
+            pstmt = con.prepareStatement (fsql);
+            pstmt.setString(1, "Gibi");
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro na inclusão da categoria: "+ ex); }
+
+        fsql = "insert into categoria (nome) values (?)";
+        try {
+            pstmt = con.prepareStatement (fsql);
+            pstmt.setString(1, "Aventura");
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro na inclusão da categoria: "+ ex); }
+
+
+
     }
 
-    public Usuario getUsuario(String username, String senha) {
-        return new Usuario();
+    public ArrayList<Categoria> getCategorias() {
+        ArrayList<Categoria> categorias = new ArrayList<>();
+
+        String fsql = "SELECT * FROM categoria ORDER BY categoria.id_categoria";
+
+        try {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(fsql);
+            while (rs.next()) {
+                categorias.add(new Categoria(rs.getInt("id_categoria"), rs.getString("nome")));
+            }
+            stmt.close();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro na seleção das categorias: "+ ex);
+        }
+
+        return categorias;
+    }
+
+    public ArrayList<Livro> getLivros() {
+        ArrayList<Livro> livros = new ArrayList<>();
+
+        String fsql = "SELECT * FROM livro LEFT JOIN categoria ON livro.id_categoria = categoria.id_categoria ORDER BY livro.id_livro";
+
+        try {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(fsql);
+            while (rs.next()) {
+                Categoria categoria = new Categoria(rs.getInt("categoria.id_categoria"), rs.getString("categoria.nome"));
+                Livro livro = new Livro(rs.getInt("livro.id_livro"), categoria, rs.getString("livro.nome"), rs.getString("livro.autor"), rs.getString("livro.foto"));
+                livros.add(livro);
+            }
+            stmt.close();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro na seleção dos livros: "+ ex);
+        }
+
+        return livros;
     }
 }
