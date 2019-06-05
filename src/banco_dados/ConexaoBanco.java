@@ -1,8 +1,12 @@
+package banco_dados;
+
 import javax.swing.*;
 import javax.xml.catalog.Catalog;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import content.*;
 
 public class ConexaoBanco {
     private String url, usuario, senha, drive;
@@ -100,5 +104,33 @@ public class ConexaoBanco {
         }
 
         return livros;
+    }
+
+
+
+    public Usuario getUsuario(String username, String password) {
+        Usuario usuario = null;
+
+        String fsql = "SELECT * FROM usuario WHERE username=?";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setString(1, username);
+            rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+                if (password.equals(rs.getString("password"))) {
+                    usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
+                    usuario.setFoto(rs.getString("foto"));
+                    usuario.setUsername(rs.getString("username"));
+                }
+            }
+
+            pstmt.close();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro na seleção do usuario: "+ ex);
+        }
+
+        return usuario;
     }
 }

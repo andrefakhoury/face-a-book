@@ -1,8 +1,11 @@
+package content;
+
 import java.util.ArrayList;
 
 public class Usuario {
     private int id;
-    private String nome;
+    private boolean admin;
+    private String nome, foto, username;
     private ArrayList<Livro> livrosProprios, livrosPegos;
 
     public Usuario() {
@@ -32,6 +35,62 @@ public class Usuario {
 
     public void addLivroPego(Livro livro) {
         livrosPegos.add(livro);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public ArrayList<Livro> getLivrosProprios() {
+        return livrosProprios;
+    }
+
+    public void setLivrosProprios(ArrayList<Livro> livrosProprios) {
+        this.livrosProprios = livrosProprios;
+    }
+
+    public ArrayList<Livro> getLivrosPegos() {
+        return livrosPegos;
+    }
+
+    public void setLivrosPegos(ArrayList<Livro> livrosPegos) {
+        this.livrosPegos = livrosPegos;
     }
 
     @Override

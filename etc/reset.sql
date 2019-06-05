@@ -23,13 +23,15 @@ CREATE TABLE usuario (
 	username CHARACTER VARYING(64),
 	password CHARACTER VARYING(64),
 	admin BOOLEAN,
+
+	nome CHARACTER VARYING(64),
 	foto CHARACTER VARYING(128)
 );
 
 CREATE TABLE disponibilidade (
 	id_disponibilidade SERIAL NOT NULL PRIMARY KEY,
 	id_livro INTEGER NOT NULL REFERENCES livro,
-	id_categoria INTEGER NOT NULL REFERENCES categoria,
+	id_usuario INTEGER NOT NULL REFERENCES usuario,
 	data_limite DATE
 );
 
@@ -38,3 +40,5 @@ CREATE TABLE emprestimo (
 	id_usuario INTEGER NOT NULL REFERENCES usuario,
 	data_entrega DATE
 );
+
+INSERT INTO usuario (username, password, admin) VALUES ('admin', 'admin', true);
