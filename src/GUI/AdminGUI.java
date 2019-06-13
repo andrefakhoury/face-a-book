@@ -19,6 +19,14 @@ public class AdminGUI extends JFrame implements ActionListener {
     private JTextField txtUserNome, txtUserUsername, txtUserPassword, txtUserFoto;
     private JCheckBox ckbUserAdmin;
 
+    // Livro
+    private JButton btnLivroAdd, btnLivroClear, btnLivroCancel;
+    private JTextField txtLivroNome, txtLivroAutor, txtLivroCatId, txtLivroCatNome, txtLivroFoto;
+
+    // Categoria
+    private JButton btnCategoriaAdd, btnCategoriaClear, btnCategoriaCancel;
+    private JTextField txtCategoriaNome;
+
     private void userClear() {
         txtUserNome.setText("");
         txtUserUsername.setText("");
@@ -57,11 +65,24 @@ public class AdminGUI extends JFrame implements ActionListener {
         }
     }
 
+    private void livroClear() {
+        txtLivroFoto.setText("");
+        txtLivroCatNome.setText("");
+        txtLivroCatId.setText("");
+        txtLivroAutor.setText("");
+        txtLivroAutor.setText("");
+        txtLivroNome.setText("");
+    }
+
+    private void livroAdd() {
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(btnAddUsuario)) {
             panMain.setVisible(false);
-            panUsuario.setVisible(true);
+            this.add(panUsuario);
         } else if (actionEvent.getSource().equals(btnAddLivro)) {
             panMain.setVisible(false);
             this.add(panLivro);
@@ -77,8 +98,16 @@ public class AdminGUI extends JFrame implements ActionListener {
             userClear();
         } else if (actionEvent.getSource().equals(btnUserCancel)) {
             userClear();
-            this.remove(panUsuario);
             panMain.setVisible(true);
+            this.remove(panUsuario);
+        } else if (actionEvent.getSource().equals(btnLivroAdd)) {
+            livroAdd();
+        } else if (actionEvent.getSource().equals(btnLivroClear)) {
+            livroClear();
+        } else if (actionEvent.getSource().equals(btnLivroCancel)) {
+            livroClear();
+            panMain.setVisible(true);
+            this.remove(panLivro);
         }
     }
 
@@ -88,6 +117,7 @@ public class AdminGUI extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
+        // Configura o painel principal
         panMain = new JPanel(null);
 
         btnAddUsuario = new JButton("Adicionar usuario");
@@ -113,19 +143,22 @@ public class AdminGUI extends JFrame implements ActionListener {
         this.add(panMain);
         this.setVisible(true);
 
+        // Configura o painel de add usuario
         panUsuario = new JPanel(new GridLayout(0, 1));
-        panUsuario.setVisible(false);
 
         txtUserNome = new JTextField("NOME");
         panUsuario.add(txtUserNome);
 
-        txtUserUsername = new JTextField("USERNAME");
+        txtUserUsername = new JTextField();
+        txtUserUsername.setToolTipText("Username");
         panUsuario.add(txtUserUsername);
 
-        txtUserPassword = new JTextField("SENHA");
+        txtUserPassword = new JTextField();
+        txtUserPassword.setToolTipText("Password");
         panUsuario.add(txtUserPassword);
 
-        txtUserFoto = new JTextField("FOTO");
+        txtUserFoto = new JTextField();
+        txtUserUsername.setToolTipText("Foto");
         panUsuario.add(txtUserFoto);
 
         ckbUserAdmin = new JCheckBox("Admin");
@@ -143,22 +176,53 @@ public class AdminGUI extends JFrame implements ActionListener {
         btnUserCancel.addActionListener(this);
         panUsuario.add(btnUserCancel);
 
-        this.add(panUsuario);
-
+        // Configura o painel de adicionar um emprestimo para a biblioteca
         panEmprestar = new JPanel(null);
-        panEmprestar.setVisible(false);
 
-        panLivro = new JPanel(null);
-        panLivro.setVisible(false);
+        // Configura o painel de adicionar livro
+        panLivro = new JPanel(new GridLayout(0, 1));
 
-        panCategoria = new JPanel(null);
-        panCategoria.setVisible(false);
+        txtLivroNome = new JTextField();
+        txtLivroNome.setToolTipText("Nome");
+        panLivro.add(txtLivroNome);
 
-        this.add(panEmprestar);
-        this.add(panLivro);
-        this.add(panCategoria);
+        txtLivroAutor = new JTextField();
+        txtLivroNome.setToolTipText("Autor");
+        panLivro.add(txtLivroAutor);
+
+        txtLivroCatId = new JTextField();
+        txtLivroCatId.setToolTipText("Id Cat.");
+        txtLivroCatId.setEnabled(false);
+        panLivro.add(txtLivroCatId);
+
+        txtLivroCatNome = new JTextField();
+        txtLivroCatNome.setToolTipText("Nome Cat.");
+        panLivro.add(txtLivroCatNome);
+
+        txtLivroFoto = new JTextField();
+        txtLivroFoto.setToolTipText("Foto");
+        panLivro.add(txtLivroFoto);
+
+        btnLivroAdd = new JButton("Adicionar");
+        btnLivroAdd.addActionListener(this);
+        panLivro.add(btnLivroAdd);
+
+        btnLivroClear = new JButton("Limpar");
+        btnLivroClear.addActionListener(this);
+        panLivro.add(btnLivroClear);
+
+        btnLivroCancel = new JButton("Cancelar");
+        btnLivroCancel.addActionListener(this);
+        panLivro.add(btnLivroCancel);
+
+        // Configura o painel de Adicionar Categoria
+        panCategoria = new JPanel(new GridLayout(0, 1));
+        txtCategoriaNome = new JTextField();
+        txtCategoriaNome.setToolTipText("Nome");
+
+
+
+
 
     }
-
-
 }
