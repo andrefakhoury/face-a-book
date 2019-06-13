@@ -1,3 +1,4 @@
+import GUI.AdminGUI;
 import GUI.LoginGUI;
 import GUI.UserGUI;
 import banco_dados.ConexaoBanco;
@@ -18,16 +19,20 @@ public class Main {
 //
 //        conexaoBanco.disconnect();
 
-        ConexaoBanco conexaoBanco = new ConexaoBanco();
-        conexaoBanco.connect();
+//        ConexaoBanco conexaoBanco = new ConexaoBanco();
+//        conexaoBanco.connect();
+//
+////        conexaoBanco.resetDB();
+//
+//        Usuario usuario = conexaoBanco.getUsuario("admin", "admin");
+//
+//        if (usuario == null) {
+//            JOptionPane.showMessageDialog(null, "Nenhum usuario encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+//        } else {
+//            UserGUI userGUI = new UserGUI(usuario);
+//        }
+//        conexaoBanco.disconnect();
 
-        Usuario usuario = conexaoBanco.getUsuario("admin", "admin");
-
-        if (usuario == null) {
-            JOptionPane.showMessageDialog(null, "Nenhum usuario encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else {
-            UserGUI userGUI = new UserGUI(usuario);
-        }
-        conexaoBanco.disconnect();
+        AdminGUI adminGUI = new AdminGUI();
     }
 }

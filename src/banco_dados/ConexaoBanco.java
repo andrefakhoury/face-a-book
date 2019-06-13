@@ -2,9 +2,14 @@ package banco_dados;
 
 import javax.swing.*;
 import javax.xml.catalog.Catalog;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 import content.*;
 
@@ -43,9 +48,6 @@ public class ConexaoBanco {
     public void test() {
         String fsql;
 
-
-
-
         fsql = "insert into categoria (nome) values (?)";
         try {
             pstmt = con.prepareStatement (fsql);
@@ -61,9 +63,6 @@ public class ConexaoBanco {
             pstmt.execute();
             pstmt.close();
         } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro na inclusão da categoria: "+ ex); }
-
-
-
     }
 
     public ArrayList<Categoria> getCategorias() {
@@ -106,8 +105,6 @@ public class ConexaoBanco {
         return livros;
     }
 
-
-
     public Usuario getUsuario(String username, String password) {
         Usuario usuario = null;
 
@@ -118,12 +115,11 @@ public class ConexaoBanco {
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
 
-            if(rs.next()) {
-                if (password.equals(rs.getString("password"))) {
-                    usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
-                    usuario.setFoto(rs.getString("foto"));
-                    usuario.setUsername(rs.getString("username"));
-                }
+            if(rs.next() && password != null && password.equals(rs.getString("password"))) {
+                usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
+                usuario.setFoto(rs.getString("foto"));
+                usuario.setUsername(rs.getString("username"));
+                usuario.setAdmin(rs.getBoolean("admin"));
             }
 
             pstmt.close();
@@ -132,5 +128,55 @@ public class ConexaoBanco {
         }
 
         return usuario;
+    }
+
+    public boolean insertUsuario(Usuario usuario) {
+        if (Objects.isNull(usuario)) {
+            return false;
+        }
+
+        String fsql = "INSERT INTO usuario (username, password, admin, nome, foto) VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setString(1, usuario.getUsername());
+            pstmt.setString(2, usuario.getPassword());
+            pstmt.setBoolean(3, usuario.isAdmin());
+            pstmt.setString(4, usuario.getNome());
+            pstmt.setString(5, usuario.getFoto());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao adicionar o usuario: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public void resetDB() {
+        String sql = "";
+
+        File file = new File("./etc/reset.sql");
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            return;
+        }
+
+        while (scanner.hasNextLine()) {
+            String str = scanner.nextLine();
+            sql += str + "\n";
+        }
+
+        scanner.close();
+
+        try {
+            stmt = con.createStatement();
+            stmt.execute(sql);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao resetar o banco: "+ ex);
+        }
     }
 }

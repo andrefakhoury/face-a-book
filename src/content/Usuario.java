@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Usuario {
     private int id;
     private boolean admin;
-    private String nome, foto, username;
+    private String nome, foto, username, password;
     private ArrayList<Livro> livrosProprios, livrosPegos;
 
     public Usuario() {
@@ -69,6 +69,14 @@ public class Usuario {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isAdmin() {
         return admin;
     }
@@ -95,17 +103,17 @@ public class Usuario {
 
     @Override
     public String toString() {
-        String ret = "(" + id + ") " + nome + "\n";
+        String ret = "(" + id + ") " + nome + " - " + username + "\n";
 
-        ret += "Livros Proprios:\n";
-        for (Livro livro : livrosProprios) {
-            ret += "\t" + livro + "\n";
-        }
-
-        ret += "Livros Pegos:\n";
-        for (Livro livro : livrosPegos) {
-            ret += "\t" + livro + "\n";
-        }
+//        ret += "Livros Proprios:\n";
+//        for (Livro livro : livrosProprios) {
+//            ret += "\t" + livro + "\n";
+//        }
+//
+//        ret += "Livros Pegos:\n";
+//        for (Livro livro : livrosPegos) {
+//            ret += "\t" + livro + "\n";
+//        }
 
         return ret;
     }
