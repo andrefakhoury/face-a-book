@@ -5,6 +5,10 @@ public class Livro {
     private Categoria categoria;
     private String nome, autor, foto;
 
+    public Livro() {
+        this.id = 0;
+    }
+
 
     public Livro(int id, Categoria categoria, String nome, String autor, String foto) {
         this.id = id;
@@ -28,6 +32,10 @@ public class Livro {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public void setCategoria(int id, String nome) {
+        this.categoria = new Categoria(id, nome);
     }
 
     public String getNome() {
@@ -56,6 +64,6 @@ public class Livro {
 
     @Override
     public String toString() {
-        return "(" + id + ") " + nome + " - " + autor + " - " + categoria;
+        return "(" + id + ") " + nome + " - " + autor + " - " + categoria.getNome();
     }
 }

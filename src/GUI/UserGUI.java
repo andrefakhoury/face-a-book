@@ -14,9 +14,9 @@ public class UserGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(btnPegarLivro)) {
-
+            BuscaLivroGUI buscaLivroGUI = new BuscaLivroGUI();
         } else if (actionEvent.getSource().equals(btnAdmin)) {
-
+            AdminGUI adminGUI = new AdminGUI();
         }
     }
 
@@ -78,10 +78,6 @@ public class UserGUI extends JFrame implements ActionListener {
         panMain.add(btnPegarLivro);
 
         if (usuario.isAdmin()) {
-//            JButton btnEmprestarLivro = new JButton("Emprestar um livro");
-//            btnEmprestarLivro.setBounds(700, 555, 200, 50);
-//            panMain.add(btnEmprestarLivro);
-
             btnAdmin = new JButton("Area do Admin");
             btnAdmin.setBounds(700, 555, 200, 50);
             btnAdmin.addActionListener(this);

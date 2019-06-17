@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -87,14 +88,14 @@ public class ConexaoBanco {
     public ArrayList<Livro> getLivros() {
         ArrayList<Livro> livros = new ArrayList<>();
 
-        String fsql = "SELECT * FROM livro LEFT JOIN categoria ON livro.id_categoria = categoria.id_categoria ORDER BY livro.id_livro";
+        String fsql = "SELECT * FROM livro INNER JOIN categoria ON livro.id_categoria = categoria.id_categoria ORDER BY livro.id_livro";
 
         try {
             stmt = con.createStatement();
             rs = stmt.executeQuery(fsql);
             while (rs.next()) {
-                Categoria categoria = new Categoria(rs.getInt("categoria.id_categoria"), rs.getString("categoria.nome"));
-                Livro livro = new Livro(rs.getInt("livro.id_livro"), categoria, rs.getString("livro.nome"), rs.getString("livro.autor"), rs.getString("livro.foto"));
+                Categoria categoria = new Categoria(rs.getInt("id_categoria"), rs.getString("nome"));
+                Livro livro = new Livro(rs.getInt("id_livro"), categoria, rs.getString("nome"), rs.getString("autor"), rs.getString("foto"));
                 livros.add(livro);
             }
             stmt.close();
@@ -103,6 +104,34 @@ public class ConexaoBanco {
         }
 
         return livros;
+    }
+
+    public ArrayList<Usuario> getUsuarios () {
+        ArrayList<Usuario> usuarios = new ArrayList<>();
+
+        String fsql = "SELECT * FROM usuario ORDER BY id_usuario";
+
+        try {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(fsql);
+            while (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id_usuario"));
+                usuario.setUsername(rs.getString("username"));
+                usuario.setPassword(rs.getString("password"));
+                usuario.setNome(rs.getString("nome"));
+                usuario.setFoto(rs.getString("foto"));
+                usuario.setAdmin(rs.getBoolean("admin"));
+
+                usuarios.add(usuario);
+            }
+
+            stmt.close();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro na seleção dos usuarios: "+ ex);
+        }
+
+        return usuarios;
     }
 
     public Usuario getUsuario(String username, String password) {
@@ -135,7 +164,7 @@ public class ConexaoBanco {
             return false;
         }
 
-        String fsql = "INSERT INTO usuario (username, password, admin, nome, foto) VALUES (?, ?, ?, ?, ?)";
+        String fsql = "INSERT INTO usuario (username, password, admin, nome, foto) VALUES (?, ?, ?, ?, ?);";
 
         try {
             pstmt = con.prepareStatement(fsql);
@@ -144,6 +173,8 @@ public class ConexaoBanco {
             pstmt.setBoolean(3, usuario.isAdmin());
             pstmt.setString(4, usuario.getNome());
             pstmt.setString(5, usuario.getFoto());
+            pstmt.execute();
+            pstmt.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar o usuario: " + ex);
             return false;
@@ -151,6 +182,75 @@ public class ConexaoBanco {
 
         return true;
     }
+
+    public boolean insertCategoria(Categoria categoria) {
+        if (Objects.isNull(categoria)) {
+            return false;
+        }
+
+        String fsql = "INSERT INTO categoria (nome) VALUES (?);";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setString(1, categoria.getNome());
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao adicionar a categoria: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean insertLivro(Livro livro) {
+        if (Objects.isNull(livro)) {
+            return false;
+        }
+
+        String fsql = "INSERT INTO livro (id_categoria, nome, autor, foto) VALUES (?, ?, ?, ?);";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setInt(1, livro.getCategoria().getId());
+            pstmt.setString(2, livro.getNome());
+            pstmt.setString(3, livro.getAutor());
+            pstmt.setString(4, livro.getFoto());
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao adicionar o livro: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean insertDisponibilidade(int idLivro, int idUsuario, Date data) {
+        if (Objects.isNull(data)) {
+            return false;
+        }
+
+        String fsql = "INSERT INTO disponibilidade (id_livro, id_usuario, data_limite) VALUES (?, ?, ?);";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setInt(1, idLivro);
+            pstmt.setInt(2, idUsuario);
+            pstmt.setDate(3, data);
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao adicionar a disponibilidade: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     public void resetDB() {
         String sql = "";
@@ -175,6 +275,7 @@ public class ConexaoBanco {
         try {
             stmt = con.createStatement();
             stmt.execute(sql);
+            stmt.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao resetar o banco: "+ ex);
         }
