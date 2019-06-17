@@ -13,7 +13,14 @@ public class Livro {
     private int id;
     private Categoria categoria;
     private String nome, autor, foto;
-
+    
+    /**
+     *Contrutor que cria livro com id = 0 e outros elementos nulos 
+     */
+    public Livro() {
+        this.id = 0;
+    }
+    
     /**
      * 
      * @param id - inteiro com chave do livro
