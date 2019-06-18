@@ -70,6 +70,15 @@ public class Livro {
     }
     
     /**
+     * Função para mudar a categoria de um objeto Livro a partir de seu id e nome
+     * @param id Id da nova categoria
+     * @param nome Nome da nova categoria
+     */
+    public void setCategoria(int id, String nome) {
+        this.categoria = new Categoria(id, nome);
+    }
+    
+    /**
      * Função que retorna o nome do livro
      * @return String nome do livro
      */
