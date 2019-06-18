@@ -9,6 +9,15 @@ public class Categoria {
     private String nome;
     
     /**
+     * Contrutor do objeto categoria que recebe o nome da categoria
+     * @param nome - nome da categoria
+     */
+    public Categoria(String nome) {
+        this.id = 0;
+        this.nome = nome;
+    }
+    
+    /**
      * Contrutor do objeto categoria que recebe o nome da categoria e um inteiro como chave para a categoria
      * @param id - chave associada a categoria
      * @param nome - nome da categoria
@@ -49,7 +58,6 @@ public class Categoria {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
    
     /**
      * Função que transforma o objeto Categoria em String no seguinte formato:
