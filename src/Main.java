@@ -15,14 +15,14 @@ public class Main {
 //
 //        conexaoBanco.test();
 //
-//        LoginGUI loginGUI = new LoginGUI();
+        LoginGUI loginGUI = new LoginGUI();
 //
 //        conexaoBanco.disconnect();
 
 //        ConexaoBanco conexaoBanco = new ConexaoBanco();
 //        conexaoBanco.connect();
 //
-////        conexaoBanco.resetDB();
+//        conexaoBanco.resetDB();
 //
 //        Usuario usuario = conexaoBanco.getUsuario("admin", "admin");
 //
@@ -33,6 +33,6 @@ public class Main {
 //        }
 //        conexaoBanco.disconnect();
 
-        AdminGUI adminGUI = new AdminGUI();
+//        AdminGUI adminGUI = new AdminGUI();
     }
 }

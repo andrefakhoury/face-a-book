@@ -1,5 +1,3 @@
-package Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ class UsuarioTest {
 	void testCreate2() {
 		Usuario u = new Usuario(1,"nome");
 		assertNotNull(u);
+
 	}
 	
 	@Test

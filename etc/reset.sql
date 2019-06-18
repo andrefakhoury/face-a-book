@@ -42,10 +42,16 @@ CREATE TABLE disponibilidade (
 
 -- Tabela emprestimo: representa um emprestimo de livro
 CREATE TABLE emprestimo (
+    id_emprestimo SERIAL NOT NULL PRIMARY KEY,
 	id_disponibilidade INTEGER NOT NULL REFERENCES disponibilidade,
 	id_usuario INTEGER NOT NULL REFERENCES usuario,
+	status_emprestimo INTEGER NOT NULL, -- 0: emprestimo feito; 1: pegou o livro; 2: entregou o livro
 	data_entrega DATE
 );
 
--- Cria o usuario admin
+-- Cria usuarios padroes
 INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('admin', 'admin', true, 'Administrador', './images/admin.png');
+INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('user', 'user', false, 'Usuario Comum', './images/profile.png');
+
+INSERT INTO categoria (nome) VALUES ('Aventura');
+INSERT INTO livro (id_categoria, nome, autor, foto) VALUES (1, 'Harry Potter', 'JK Rowling', './images/unknown.jpeg');

@@ -16,6 +16,7 @@ public class AdminGUI extends JFrame implements ActionListener {
     // Geral
     private JPanel panMain, panUsuario, panLivro, panCategoria, panEmprestar;
     private JButton btnAddUsuario, btnAddLivro, btnAddCategoria, btnAddEmprestimo;
+    private JButton btnConfirmaEmprestimo, btnConfirmaDevolucao, btnPegarLivroDeVolta;
 
     // Usuario
     private JButton btnUserAdd, btnUserClear, btnUserCancel;
@@ -26,6 +27,7 @@ public class AdminGUI extends JFrame implements ActionListener {
     private JButton btnLivroAdd, btnLivroClear, btnLivroCancel;
     private JTextField txtLivroNome, txtLivroAutor, txtLivroFoto;
     private JComboBox cmbLivroCat;
+    private JButton btnLivroCategoria;
 
     // Categoria
     private JButton btnCategoriaAdd, btnCategoriaClear, btnCategoriaCancel;
@@ -35,6 +37,7 @@ public class AdminGUI extends JFrame implements ActionListener {
     private JButton btnEmprestimoAdd, btnEmprestimoClear, btnEmprestimoCancel;
     private JComboBox cmbEmprestimoUsuario, cmbEmprestimoLivro;
     private JTextField txtEmprestimoData;
+    private JButton btnEmprestimoLivro, btnEmprestimoUsuario;
 
     private boolean isAddLivro = false, isAddEmprestimo = false;
 
@@ -44,9 +47,8 @@ public class AdminGUI extends JFrame implements ActionListener {
         ArrayList<Categoria> categorias = conexaoBanco.getCategorias();
         conexaoBanco.disconnect();
         cmbLivroCat.removeAllItems();
-        cmbLivroCat.addItem("");
         for (Categoria categoria : categorias) {
-            cmbLivroCat.addItem(categoria.toString());
+            cmbLivroCat.addItem(categoria);
         }
     }
 
@@ -56,7 +58,6 @@ public class AdminGUI extends JFrame implements ActionListener {
         ArrayList<Livro> livros = conexaoBanco.getLivros();
         conexaoBanco.disconnect();
         cmbEmprestimoLivro.removeAllItems();
-        cmbEmprestimoLivro.addItem("");
         for (Livro livro : livros) {
             cmbEmprestimoLivro.addItem(livro);
         }
@@ -68,7 +69,6 @@ public class AdminGUI extends JFrame implements ActionListener {
         ArrayList<Usuario> usuarios = conexaoBanco.getUsuarios();
         conexaoBanco.disconnect();
         cmbEmprestimoUsuario.removeAllItems();
-        cmbEmprestimoUsuario.addItem("");
         for (Usuario usuario : usuarios) {
             cmbEmprestimoUsuario.addItem(usuario);
         }
@@ -107,11 +107,11 @@ public class AdminGUI extends JFrame implements ActionListener {
             if (added) {
                 JOptionPane.showMessageDialog(this, "Inserido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
+                updateComboUsuarios();
                 userClear();
 
                 if (isAddEmprestimo) {
                     panEmprestar.setVisible(true);
-                    updateComboUsuarios();
                     cmbEmprestimoUsuario.setSelectedIndex(cmbEmprestimoUsuario.getItemCount()-1);
                 } else {
                     panMain.setVisible(true);
@@ -130,41 +130,23 @@ public class AdminGUI extends JFrame implements ActionListener {
         txtLivroNome.setText("");
     }
 
-    private int getIdFromCategoria(String categoria) {
-        int ret = 0;
-        for (int i = 1; i < categoria.length(); i++) {
-            if (categoria.charAt(i) >= '0' && categoria.charAt(i) <= '9') {
-                ret = ret * 10 + (categoria.charAt(i) - '0');
-            } else {
-                break;
-            }
-        }
-
-        return ret;
-    }
-
     private void livroAdd() {
         Livro livro = new Livro();
 
         String nome = txtLivroNome.getText();
         String autor = txtLivroAutor.getText();
         String foto = txtLivroFoto.getText();
-        String cat = cmbLivroCat.getSelectedItem() == null ? null : cmbLivroCat.getSelectedItem().toString();
+        Categoria cat = (Categoria) cmbLivroCat.getSelectedItem();
 
-        if (nome == null || nome.equals("") || autor == null || autor.equals("") || foto == null || foto.equals("") || cat == null || cat.equals("")) {
+        if (nome == null || nome.equals("") || autor == null || autor.equals("") || foto == null || foto.equals("") || cat == null) {
             JOptionPane.showMessageDialog(this, "Campos vazios...", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
-        }
-
-        int catId = 0;
-        for (int i = 1; cat.charAt(i) >= '0' && cat.charAt(i) <= '9'; i++) {
-            catId = catId * 10 + (cat.charAt(i) - '0');
         }
 
         livro.setNome(nome);
         livro.setAutor(autor);
         livro.setFoto(foto);
-        livro.setCategoria(catId, "");
+        livro.setCategoria(cat.getId(), cat.getNome());
 
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
@@ -174,11 +156,11 @@ public class AdminGUI extends JFrame implements ActionListener {
         if (added) {
             JOptionPane.showMessageDialog(this, "Inserido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
+            updateComboLivros();
             livroClear();
 
             if (isAddEmprestimo) {
                 panEmprestar.setVisible(true);
-                updateComboLivros();
                 cmbEmprestimoLivro.setSelectedIndex(cmbEmprestimoLivro.getItemCount()-1);
             } else {
                 panMain.setVisible(true);
@@ -205,10 +187,10 @@ public class AdminGUI extends JFrame implements ActionListener {
             if (conexaoBanco.insertCategoria(categoria)) {
                 JOptionPane.showMessageDialog(this, "Inserido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
+                updateComboCategoria();
                 categoriaClear();
                 if (isAddLivro) {
                     panLivro.setVisible(true);
-                    updateComboCategoria();
                     cmbLivroCat.setSelectedIndex(cmbLivroCat.getItemCount()-1);
                 } else {
                     panMain.setVisible(true);
@@ -226,24 +208,20 @@ public class AdminGUI extends JFrame implements ActionListener {
     }
 
     private void emprestimoAdd() {
-        String livro = cmbEmprestimoLivro.getSelectedItem() == null ? null : cmbEmprestimoLivro.getSelectedItem().toString();
-        String usuario = cmbEmprestimoUsuario.getSelectedItem() == null ? null : cmbEmprestimoUsuario.getSelectedItem().toString();
+//        String livro = cmbEmprestimoLivro.getSelectedItem() == null ? null : cmbEmprestimoLivro.getSelectedItem().toString();
+//        String usuario = cmbEmprestimoUsuario.getSelectedItem() == null ? null : cmbEmprestimoUsuario.getSelectedItem().toString();
+
+        Livro livro = (Livro) cmbEmprestimoLivro.getSelectedItem();
+        Usuario usuario = (Usuario) cmbEmprestimoUsuario.getSelectedItem();
         String data = txtEmprestimoData.getText();
 
-        if (livro == null || usuario == null || livro.equals("") || usuario.equals("") || data == null || data.equals("")) {
+        if (livro == null || usuario == null || data == null || data.equals("")) {
             JOptionPane.showMessageDialog(this, "Campos vazios...", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        int idLivro = 0;
-        for (int i = 1; livro.charAt(i) >= '0' && livro.charAt(i) <= '9'; i++) {
-            idLivro = idLivro * 10 + (livro.charAt(i) - '0');
-        }
-
-        int idUsuario = 0;
-        for (int i = 1; usuario.charAt(i) >= '0' && usuario.charAt(i) <= '9'; i++) {
-            idUsuario = idUsuario * 10 + (usuario.charAt(i) - '0');
-        }
+        int idLivro = livro.getId();
+        int idUsuario = usuario.getId();
 
         String novaData;
         java.sql.Date date;
@@ -276,7 +254,7 @@ public class AdminGUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnAddUsuario)) {
+        if (actionEvent.getSource().equals(btnAddUsuario) || actionEvent.getSource().equals(btnEmprestimoUsuario)) {
             if (isAddEmprestimo) {
                 panEmprestar.setVisible(false);
             } else {
@@ -284,7 +262,7 @@ public class AdminGUI extends JFrame implements ActionListener {
             }
 
             this.add(panUsuario);
-        } else if (actionEvent.getSource().equals(btnAddLivro)) {
+        } else if (actionEvent.getSource().equals(btnAddLivro) || actionEvent.getSource().equals(btnEmprestimoLivro)) {
             if (isAddEmprestimo) {
                 panEmprestar.setVisible(false);
             } else {
@@ -293,7 +271,7 @@ public class AdminGUI extends JFrame implements ActionListener {
 
             this.add(panLivro);
             isAddLivro = true;
-        } else if (actionEvent.getSource().equals(btnAddCategoria)) {
+        } else if (actionEvent.getSource().equals(btnAddCategoria) || actionEvent.getSource().equals(btnLivroCategoria)) {
             if (panLivro.isVisible()) {
                 panLivro.setVisible(false);
             } else if (panMain.isVisible()) {
@@ -305,6 +283,12 @@ public class AdminGUI extends JFrame implements ActionListener {
             panMain.setVisible(false);
             this.add(panEmprestar);
             isAddEmprestimo = true;
+        } else if (actionEvent.getSource().equals(btnConfirmaDevolucao)) {
+            DevolucaoGUI devolucaoGUI = new DevolucaoGUI();
+        } else if (actionEvent.getSource().equals(btnConfirmaEmprestimo)) {
+            ConfirmaEmprestimoGUI confirmaEmprestimoGUI = new ConfirmaEmprestimoGUI();
+        } else if (actionEvent.getSource().equals(btnPegarLivroDeVolta)) {
+            RetirarLivroGUI retirarLivroGUI = new RetirarLivroGUI();
         }
 
         // Botoes especificos do Adicionar Usuario
@@ -389,6 +373,21 @@ public class AdminGUI extends JFrame implements ActionListener {
         btnAddCategoria.addActionListener(this);
         panMain.add(btnAddCategoria);
 
+        btnConfirmaEmprestimo = new JButton("Confirmar emprestimo");
+        btnConfirmaEmprestimo.setBounds(10, 260, 200, 50);
+        btnConfirmaEmprestimo.addActionListener(this);
+        panMain.add(btnConfirmaEmprestimo);
+
+        btnConfirmaDevolucao = new JButton("Confirmar devolucao");
+        btnConfirmaDevolucao.setBounds(10, 320, 200, 50);
+        btnConfirmaDevolucao.addActionListener(this);
+        panMain.add(btnConfirmaDevolucao);
+
+        btnPegarLivroDeVolta = new JButton("Devolver livro que emprestaram a biblioteca");
+        btnPegarLivroDeVolta.setBounds(10, 380, 200, 50);
+        btnPegarLivroDeVolta.addActionListener(this);
+        panMain.add(btnPegarLivroDeVolta);
+
         this.add(panMain);
         this.setVisible(true);
 
@@ -433,13 +432,17 @@ public class AdminGUI extends JFrame implements ActionListener {
         panEmprestar.add(cmbEmprestimoLivro);
         updateComboLivros();
 
-        panEmprestar.add(btnAddLivro);
+        btnEmprestimoLivro = new JButton("Adicionar Livro");
+        btnEmprestimoLivro.addActionListener(this);
+        panEmprestar.add(btnEmprestimoLivro);
 
         cmbEmprestimoUsuario = new JComboBox();
         panEmprestar.add(cmbEmprestimoUsuario);
         updateComboUsuarios();
 
-        panEmprestar.add(btnAddUsuario);
+        btnEmprestimoUsuario = new JButton("Adicionar Usuario");
+        btnEmprestimoUsuario.addActionListener(this);
+        panEmprestar.add(btnEmprestimoUsuario);
 
         txtEmprestimoData = new JTextField("01/01/2010");
         panEmprestar.add(txtEmprestimoData);
@@ -471,7 +474,9 @@ public class AdminGUI extends JFrame implements ActionListener {
         updateComboCategoria();
         panLivro.add(cmbLivroCat);
 
-        panLivro.add(btnAddCategoria);
+        btnLivroCategoria = new JButton("Adicionar Categoria");
+        btnLivroCategoria.addActionListener(this);
+        panLivro.add(btnLivroCategoria);
 
         txtLivroFoto = new JTextField();
         txtLivroFoto.setToolTipText("Foto");
