@@ -50,8 +50,8 @@ CREATE TABLE emprestimo (
 );
 
 -- Cria usuarios padroes
-INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('admin', 'admin', true, 'Administrador', './images/admin.png');
-INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('user', 'user', false, 'Usuario Comum', './images/profile.png');
+INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', true, 'Administrador', './images/admin.png');
+INSERT INTO usuario (username, password, admin, nome, foto) VALUES ('user', 'ee11cbb19052e40b07aac0ca060c23ee', false, 'Usuario Comum', './images/profile.png');
 
 INSERT INTO categoria (nome) VALUES ('Aventura');
 INSERT INTO livro (id_categoria, nome, autor, foto) VALUES (1, 'Harry Potter', 'JK Rowling', './images/unknown.jpeg');

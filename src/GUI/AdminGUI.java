@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import banco_dados.ConexaoBanco;
@@ -208,9 +209,6 @@ public class AdminGUI extends JFrame implements ActionListener {
     }
 
     private void emprestimoAdd() {
-//        String livro = cmbEmprestimoLivro.getSelectedItem() == null ? null : cmbEmprestimoLivro.getSelectedItem().toString();
-//        String usuario = cmbEmprestimoUsuario.getSelectedItem() == null ? null : cmbEmprestimoUsuario.getSelectedItem().toString();
-
         Livro livro = (Livro) cmbEmprestimoLivro.getSelectedItem();
         Usuario usuario = (Usuario) cmbEmprestimoUsuario.getSelectedItem();
         String data = txtEmprestimoData.getText();
@@ -230,6 +228,9 @@ public class AdminGUI extends JFrame implements ActionListener {
             novaData = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)).format
                     (DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US));
             date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(novaData).getTime());
+
+            if (date.before(new Date())) throw new Exception("Data inferior ao dia atual");
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Data invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;

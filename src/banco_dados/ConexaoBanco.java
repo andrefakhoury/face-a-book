@@ -1,6 +1,7 @@
 package banco_dados;
 
 import javax.swing.*;
+import javax.swing.text.html.StyleSheet;
 import javax.xml.catalog.Catalog;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.security.*;
+import java.math.*;
 
 import content.*;
 
@@ -64,6 +67,20 @@ public class ConexaoBanco {
             pstmt.execute();
             pstmt.close();
         } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro na inclusão da categoria: "+ ex); }
+    }
+
+    public String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
     }
 
     public ArrayList<Categoria> getCategorias() {
@@ -287,7 +304,9 @@ public class ConexaoBanco {
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
 
-            if(rs.next() && password != null && password.equals(rs.getString("password"))) {
+            System.out.println(MD5(password));
+
+            if(rs.next() && password != null && MD5(password).equals(rs.getString("password"))) {
                 usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
                 usuario.setFoto(rs.getString("foto"));
                 usuario.setUsername(rs.getString("username"));
@@ -488,7 +507,7 @@ public class ConexaoBanco {
         try {
             pstmt = con.prepareStatement(fsql);
             pstmt.setString(1, usuario.getUsername());
-            pstmt.setString(2, usuario.getPassword());
+            pstmt.setString(2, MD5(usuario.getPassword()));
             pstmt.setBoolean(3, usuario.isAdmin());
             pstmt.setString(4, usuario.getNome());
             pstmt.setString(5, usuario.getFoto());
