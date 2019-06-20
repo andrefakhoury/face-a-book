@@ -1,19 +1,12 @@
 package GUI;
 
 import banco_dados.ConexaoBanco;
-import content.Disponibilidade;
-import content.Emprestimo;
-import content.Livro;
 import content.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 public class EditarPerfilGUI extends JDialog implements ActionListener {
     private JTextField txtOldPassword, txtNewPassword, txtFoto;
@@ -74,7 +67,6 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
     }
 
     public EditarPerfilGUI(Usuario usuario) {
-//        super("Editar perfil");
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);

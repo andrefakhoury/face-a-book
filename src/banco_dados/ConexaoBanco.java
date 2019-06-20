@@ -618,6 +618,79 @@ public class ConexaoBanco {
         return true;
     }
 
+    public boolean updateLivro(Livro livro) {
+        if (Objects.isNull(livro)) {
+            return false;
+        }
+
+        String fsql = "UPDATE livro SET nome = ?, autor = ?, foto = ?, id_categoria = ? WHERE id_livro = ?;";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+
+            pstmt.setString(1, livro.getNome());
+            pstmt.setString(2, livro.getAutor());
+            pstmt.setString(3, livro.getFoto());
+            pstmt.setInt(4, livro.getCategoria().getId());
+            pstmt.setInt(5, livro.getId());
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao editar o usuario: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean existEmprestimo (int idDisponibilidade) {
+        String fsql = "SELECT * FROM emprestimo WHERE id_disponibilidade = ? AND status_emprestimo <> 2";
+        boolean exists = false;
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setInt(1, idDisponibilidade);
+            rs = pstmt.executeQuery();
+
+            exists = rs.next();
+
+            pstmt.close();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro na seleção do emprestimo: "+ ex);
+        }
+
+        return exists;
+    }
+
+    public boolean updateDisponibilidade(int idDisponibilidade, int idLivro, Date data) {
+        if (Objects.isNull(data)) {
+            return false;
+        }
+
+        if (existEmprestimo(idDisponibilidade)) {
+            return false;
+        }
+
+        String fsql = "UPDATE disponibilidade SET id_livro = ?, data_limite = ? WHERE id_disponibilidade = ?;";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+
+            pstmt.setInt(1, idLivro);
+            pstmt.setDate(2, data);
+            pstmt.setInt(3, idDisponibilidade);
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao editar a disponibilidade: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean insertLivro(Livro livro) {
         if (Objects.isNull(livro)) {
             return false;
