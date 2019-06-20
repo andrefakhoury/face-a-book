@@ -1,6 +1,4 @@
-import GUI.AdminGUI;
-import GUI.LoginGUI;
-import GUI.UserGUI;
+import GUI.*;
 import banco_dados.ConexaoBanco;
 import content.Usuario;
 
@@ -12,27 +10,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
 //        ConexaoBanco conexaoBanco = new ConexaoBanco();
 //        conexaoBanco.connect();
-//
-//        conexaoBanco.test();
-//
-        LoginGUI loginGUI = new LoginGUI();
-//
-//        conexaoBanco.disconnect();
-
-//        ConexaoBanco conexaoBanco = new ConexaoBanco();
-//        conexaoBanco.connect();
-//
 //        conexaoBanco.resetDB();
-//
-//        Usuario usuario = conexaoBanco.getUsuario("admin", "admin");
-//
-//        if (usuario == null) {
-//            JOptionPane.showMessageDialog(null, "Nenhum usuario encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-//        } else {
-//            UserGUI userGUI = new UserGUI(usuario);
-//        }
 //        conexaoBanco.disconnect();
 
-//        AdminGUI adminGUI = new AdminGUI();
+        if (new ConexaoBanco().testConnection()) {
+            new LoginGUI();
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Houve algum erro na conexao ao banco de dados.\n" +
+                    "Verifique a instalacao do PostgreSQL.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

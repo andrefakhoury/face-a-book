@@ -10,9 +10,24 @@ import banco_dados.ConexaoBanco;
 import content.*;
 
 public class UserGUI extends JFrame implements ActionListener {
-    private JButton btnAdmin, btnPegarLivro, btnLogout;
+    private JButton btnAdmin, btnPegarLivro, btnLogout, btnEditarPerfil;
     private JComboBox cmbLivrosPegos, cmbLivrosEmprestados;
+    private JLabel lblInfo, lblBemVindo, lblFoto;
     private Usuario usuario;
+
+    private void updateInformacoes() {
+        ConexaoBanco conexaoBanco = new ConexaoBanco();
+        conexaoBanco.connect();
+        usuario = conexaoBanco.getUsuario(usuario.getUsername(), null);
+        conexaoBanco.disconnect();
+
+        lblFoto.setIcon(new ImageIcon(new ImageIcon(usuario.getFoto()).getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT)));
+        lblBemVindo.setText("Bem vindo(a), " + usuario.getNome() + "!");
+        lblInfo.setText(usuario.toString());
+
+        updateComboLivrosEmprestados();
+        updateComboLivrosPegos();
+    }
 
     private void updateComboLivrosPegos() {
         ConexaoBanco conexaoBanco = new ConexaoBanco();
@@ -42,14 +57,17 @@ public class UserGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(btnPegarLivro)) {
             BuscaLivroGUI buscaLivroGUI = new BuscaLivroGUI(usuario);
-            updateComboLivrosEmprestados();
-            updateComboLivrosPegos();
+            updateInformacoes();
         } else if (actionEvent.getSource().equals(btnAdmin)) {
-            AdminGUI adminGUI = new AdminGUI();
+            new AdminGUI();
+            updateInformacoes();
         } else if (actionEvent.getSource().equals(btnLogout)) {
             this.setVisible(false);
             this.dispose();
             LoginGUI loginGUI = new LoginGUI();
+        } else if (actionEvent.getSource().equals(btnEditarPerfil)) {
+            new EditarPerfilGUI(usuario);
+            updateInformacoes();
         }
     }
 
@@ -75,16 +93,16 @@ public class UserGUI extends JFrame implements ActionListener {
 //
 //        return new ImageIcon(im);
 
-        JLabel lblFoto = new JLabel();
+        lblFoto = new JLabel();
         lblFoto.setBounds(700, 10, 200, 230);
         lblFoto.setIcon(new ImageIcon(new ImageIcon(usuario.getFoto()).getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT)));
         panMain.add(lblFoto);
 
-        JLabel lblBemVindo = new JLabel("Bem vindo(a), " + usuario.getNome() + "!");
+        lblBemVindo = new JLabel("Bem vindo(a), " + usuario.getNome() + "!");
         lblBemVindo.setBounds(10, 10, 300, 20);
         panMain.add(lblBemVindo);
 
-        JLabel lblInfo = new JLabel(usuario.toString());
+        lblInfo = new JLabel(usuario.toString());
         lblInfo.setBounds(700, 245, 300, 20);
         panMain.add(lblInfo);
 
@@ -113,6 +131,11 @@ public class UserGUI extends JFrame implements ActionListener {
         cmbLivrosEmprestados = new JComboBox();
         panEmprestados.add(cmbLivrosEmprestados);
         updateComboLivrosEmprestados();
+
+        btnEditarPerfil = new JButton("Editar perfil");
+        btnEditarPerfil.setBounds(700, 300, 200, 50);
+        btnEditarPerfil.addActionListener(this);
+        panMain.add(btnEditarPerfil);
 
         btnPegarLivro = new JButton("Consultar livros");
         btnPegarLivro.setBounds(700, 500, 200, 50);

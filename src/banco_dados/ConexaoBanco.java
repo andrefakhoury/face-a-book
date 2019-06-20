@@ -49,6 +49,22 @@ public class ConexaoBanco {
         url = "jdbc:postgresql://localhost:5432/face_a_book";
     }
 
+    public boolean testConnection() {
+        boolean test = true;
+
+        try {
+            Class.forName(drive);
+            con = DriverManager.getConnection(url, usuario, senha);
+            con.close();
+        } catch (Exception ex) {
+            test = false;
+        } finally {
+            con = null;
+        }
+
+        return test;
+    }
+
     public void test() {
         String fsql;
 
@@ -278,7 +294,7 @@ public class ConexaoBanco {
                 Usuario usuario = new Usuario();
                 usuario.setId(rs.getInt("id_usuario"));
                 usuario.setUsername(rs.getString("username"));
-                usuario.setPassword(rs.getString("password"));
+//                usuario.setPassword(rs.getString("password"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setFoto(rs.getString("foto"));
                 usuario.setAdmin(rs.getBoolean("admin"));
@@ -304,13 +320,13 @@ public class ConexaoBanco {
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
 
-            System.out.println(MD5(password));
-
-            if(rs.next() && password != null && MD5(password).equals(rs.getString("password"))) {
-                usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
-                usuario.setFoto(rs.getString("foto"));
-                usuario.setUsername(rs.getString("username"));
-                usuario.setAdmin(rs.getBoolean("admin"));
+            if (rs.next()) {
+                if (password == null || MD5(password).equals(rs.getString("password"))) {
+                    usuario = new Usuario(rs.getInt("id_usuario"), rs.getString("nome"));
+                    usuario.setFoto(rs.getString("foto"));
+                    usuario.setUsername(rs.getString("username"));
+                    usuario.setAdmin(rs.getBoolean("admin"));
+                }
             }
 
             pstmt.close();
@@ -497,8 +513,44 @@ public class ConexaoBanco {
         return true;
     }
 
-    public boolean insertUsuario(Usuario usuario) {
+    public boolean updateUsuario(Usuario usuario, String password) {
         if (Objects.isNull(usuario)) {
+            return false;
+        }
+
+        String fsql = "";
+        if (password == null) {
+            fsql = "UPDATE usuario SET foto = ?, admin = ?, nome = ?, username = ? WHERE id_usuario = ?;";
+        } else {
+            fsql = "UPDATE usuario SET foto = ?, admin = ?, nome = ?, username = ?, password = ? WHERE id_usuario = ?;";
+        }
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+            pstmt.setString(1, usuario.getFoto());
+            pstmt.setBoolean(2, usuario.isAdmin());
+            pstmt.setString(3, usuario.getNome());
+            pstmt.setString(4, usuario.getUsername());
+
+            if (password != null) {
+                pstmt.setString(5, MD5(password));
+                pstmt.setInt(6, usuario.getId());
+            } else {
+                pstmt.setInt(5, usuario.getId());
+            }
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao alterar o usuario: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean insertUsuario(Usuario usuario, String password) {
+        if (Objects.isNull(usuario) || Objects.isNull(password)) {
             return false;
         }
 
@@ -507,7 +559,7 @@ public class ConexaoBanco {
         try {
             pstmt = con.prepareStatement(fsql);
             pstmt.setString(1, usuario.getUsername());
-            pstmt.setString(2, MD5(usuario.getPassword()));
+            pstmt.setString(2, MD5(password));
             pstmt.setBoolean(3, usuario.isAdmin());
             pstmt.setString(4, usuario.getNome());
             pstmt.setString(5, usuario.getFoto());
@@ -535,6 +587,31 @@ public class ConexaoBanco {
             pstmt.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar a categoria: " + ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean updateCategoria(Categoria categoria) {
+        if (Objects.isNull(categoria)) {
+            return false;
+        }
+
+        String fsql = "UPDATE categoria SET nome = ? WHERE id_categoria = ?;";
+
+        try {
+            pstmt = con.prepareStatement(fsql);
+
+            System.out.println(categoria);
+
+            pstmt.setString(1, categoria.getNome());
+            pstmt.setInt(2, categoria.getId());
+
+            pstmt.execute();
+            pstmt.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao editar a categoria: " + ex);
             return false;
         }
 

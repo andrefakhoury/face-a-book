@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class BuscaLivroGUI extends JFrame implements ActionListener {
+public class BuscaLivroGUI extends JDialog implements ActionListener {
     private Usuario usuario;
 
     private JTextField txtBusca;
@@ -89,11 +89,12 @@ public class BuscaLivroGUI extends JFrame implements ActionListener {
     }
 
     public BuscaLivroGUI(Usuario usuario) {
-        super("Buscar livros");
+//        super("Buscar livros");
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.usuario = usuario;
+        this.setModal(true);
 
         JPanel panMain = new JPanel(null);
 

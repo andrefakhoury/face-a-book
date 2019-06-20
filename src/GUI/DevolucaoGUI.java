@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class DevolucaoGUI extends JFrame implements ActionListener {
+public class DevolucaoGUI extends JDialog implements ActionListener {
     private JComboBox cmbEmprestimos;
     private JButton btnConfirmar;
 
@@ -41,10 +41,11 @@ public class DevolucaoGUI extends JFrame implements ActionListener {
     }
 
     public DevolucaoGUI() {
-        super("Confirmar devolucao");
+//        super("Confirmar devolucao");
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setModal(true);
 
         JPanel panMain = new JPanel(null);
 

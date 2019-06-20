@@ -14,7 +14,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RetirarLivroGUI extends JFrame implements ActionListener {
+public class RetirarLivroGUI extends JDialog implements ActionListener {
     private JComboBox cmbDisponibilidades;
     private JButton btnConfirmar;
 
@@ -41,10 +41,11 @@ public class RetirarLivroGUI extends JFrame implements ActionListener {
     }
 
     public RetirarLivroGUI() {
-        super("Retirar livro da biblioteca");
+//        super("Retirar livro da biblioteca");
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setModal(true);
 
         JPanel panMain = new JPanel(null);
 

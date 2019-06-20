@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Usuario {
     private int id;
     private boolean admin;
-    private String nome, foto, username, password;
+    private String nome, foto, username;
     private ArrayList<Livro> livrosProprios, livrosPegos;
 
     public Usuario() {
@@ -69,13 +69,13 @@ public class Usuario {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public boolean isAdmin() {
         return admin;
