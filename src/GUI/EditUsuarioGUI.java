@@ -4,8 +4,12 @@ import banco_dados.ConexaoBanco;
 import content.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class EditUsuarioGUI extends JDialog implements ActionListener {
@@ -14,6 +18,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
 
     private JButton btnUserEditar, btnUserAdd, btnUserClear, btnUserCancel;
     private JTextField txtUserId, txtUserNome, txtUserUsername, txtUserPassword, txtUserFoto;
+    private JButton btnFoto;
     private JCheckBox ckbUserAdmin;
 
     private void habilitaTexto(boolean enable) {
@@ -26,6 +31,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
         txtUserPassword.setEnabled(enable);
         txtUserFoto.setEnabled(enable);
         ckbUserAdmin.setEnabled(enable);
+        btnFoto.setEnabled(enable);
 
         btnUserAdd.setEnabled(enable);
         btnUserClear.setEnabled(enable);
@@ -135,6 +141,32 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Erro", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
+        } else if (actionEvent.getSource().equals(btnFoto)) {
+            JFileChooser fc = new JFileChooser();
+            fc.resetChoosableFileFilters();
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
+
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {
+                    JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+
+                try {
+                    String outName = "./images/" + file.hashCode() + file.getName();
+
+                    File output = new File(outName);
+                    if (!Files.exists(output.toPath())) {
+                        Files.copy(file.toPath(), output.toPath());
+                    }
+
+                    txtUserFoto.setText(outName);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao selecionar a imagem\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
@@ -179,6 +211,11 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
         txtUserFoto.setToolTipText("Foto");
         txtUserFoto.setBounds(10, 110, 100, 20);
         panMain.add(txtUserFoto);
+
+        btnFoto = new JButton("+ Foto");
+        btnFoto.addActionListener(this);
+        btnFoto.setBounds(110, 110, 100, 20);
+        panMain.add(btnFoto);
 
         ckbUserAdmin = new JCheckBox("Admin");
         ckbUserAdmin.setBounds(10, 130, 100, 20);

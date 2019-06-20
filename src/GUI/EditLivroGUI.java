@@ -4,8 +4,12 @@ import banco_dados.ConexaoBanco;
 import content.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class EditLivroGUI extends JDialog implements ActionListener {
@@ -16,7 +20,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
     private JButton btnLivroAdd, btnLivroClear, btnLivroCancel;
     private JTextField txtLivroId, txtLivroNome, txtLivroAutor, txtLivroFoto;
     private JComboBox cmbLivroCat;
-    private JButton btnLivroCategoria;
+    private JButton btnLivroCategoria, btnFoto;
 
     private void habilitaTexto(boolean enable) {
         cmbLivros.setEnabled(!enable);
@@ -28,6 +32,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         txtLivroFoto.setEnabled(enable);
         cmbLivroCat.setEnabled(enable);
         btnLivroCategoria.setEnabled(enable);
+        btnFoto.setEnabled(enable);
 
         btnLivroAdd.setEnabled(enable);
         btnLivroClear.setEnabled(enable);
@@ -149,6 +154,32 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         } else if (actionEvent.getSource().equals(btnLivroCategoria)) {
             new EditCategoriaGUI();
             updateComboCategoria();
+        } else if (actionEvent.getSource().equals(btnFoto)) {
+            JFileChooser fc = new JFileChooser();
+            fc.resetChoosableFileFilters();
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
+
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {
+                    JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+
+                try {
+                    String outName = "./images/" + file.hashCode() + file.getName();
+
+                    File output = new File(outName);
+                    if (!Files.exists(output.toPath())) {
+                        Files.copy(file.toPath(), output.toPath());
+                    }
+
+                    txtLivroFoto.setText(outName);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao selecionar a imagem\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
@@ -188,6 +219,11 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         txtLivroFoto.setToolTipText("Foto");
         txtLivroFoto.setBounds(10, 90, 200, 20);
         panMain.add(txtLivroFoto);
+
+        btnFoto = new JButton("+ Foto");
+        btnFoto.addActionListener(this);
+        btnFoto.setBounds(210, 90, 100, 20);
+        panMain.add(btnFoto);
 
         cmbLivroCat = new JComboBox();
         cmbLivroCat.setBounds(10, 110, 200, 20);

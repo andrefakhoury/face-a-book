@@ -1,17 +1,7 @@
 package GUI;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-
-import banco_dados.ConexaoBanco;
-import content.*;
 
 public class AdminGUI extends JDialog implements ActionListener {
     // Geral

@@ -4,13 +4,17 @@ import banco_dados.ConexaoBanco;
 import content.Usuario;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class EditarPerfilGUI extends JDialog implements ActionListener {
     private JTextField txtOldPassword, txtNewPassword, txtFoto;
-    private JButton btnConfirmar, btnCancelar;
+    private JButton btnConfirmar, btnCancelar, btnFoto;
     private Usuario usuario;
 
     private boolean confirmaSenha(String password) {
@@ -63,6 +67,32 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
 
             this.setVisible(false);
             this.dispose();
+        } else if (actionEvent.getSource().equals(btnFoto)) {
+            JFileChooser fc = new JFileChooser();
+            fc.resetChoosableFileFilters();
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
+
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {
+                    JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+
+                try {
+                    String outName = "./images/" + file.hashCode() + file.getName();
+
+                    File output = new File(outName);
+                    if (!Files.exists(output.toPath())) {
+                        Files.copy(file.toPath(), output.toPath());
+                    }
+
+                    txtFoto.setText(outName);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao selecionar a imagem\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
@@ -83,6 +113,10 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
 
         txtFoto = new JTextField(usuario.getFoto());
         panMain.add(txtFoto);
+
+        btnFoto = new JButton("+ Foto");
+        btnFoto.addActionListener(this);
+        panMain.add(btnFoto);
 
         btnConfirmar = new JButton("Confirmar");
         btnConfirmar.addActionListener(this);

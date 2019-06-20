@@ -1,0 +1,20 @@
+%GENERAL
+
+%MONITORIA
+
+%CALCULO
+
+%LAB FISICA
+
+%ARQUIVOS
+
+%GRAFOS
+
+%POO
+-Começar o projeto em si[2]
+
+%ORG ARQ COMP
+-Passar pro caderno[3]
+
+%GEMA
+-Aula de STL[2]

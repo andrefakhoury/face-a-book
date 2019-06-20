@@ -80,19 +80,6 @@ public class UserGUI extends JFrame implements ActionListener {
 
         JPanel panMain = new JPanel(null);
 
-//        ImageIcon icon = new ImageIcon();
-//        Image im;
-//
-//        try {
-//            icon = new ImageIcon(file);
-//        } catch (Exception ex) {
-//            icon = new ImageIcon("./images/ERROR.jpg");
-//        } finally {
-//            im = icon.getImage().getScaledInstance(cardWidth, cardHeight, Image.SCALE_DEFAULT);
-//        }
-//
-//        return new ImageIcon(im);
-
         lblFoto = new JLabel();
         lblFoto.setBounds(700, 10, 200, 230);
         lblFoto.setIcon(new ImageIcon(new ImageIcon(usuario.getFoto()).getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT)));
