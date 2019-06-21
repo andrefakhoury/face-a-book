@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.event.*;
 
+//JFrame que é a tela da inicial para usuário que é admnistriador
 public class AdminGUI extends JDialog implements ActionListener {
     // Geral
     private JPanel panMain;
@@ -12,32 +13,36 @@ public class AdminGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnEditLivro)) {
+        
+        if (actionEvent.getSource().equals(btnEditLivro)) {//Ação ao "Editar livro"
             new EditLivroGUI();
-        } else if (actionEvent.getSource().equals(btnEditCategoria)) {
+        } else if (actionEvent.getSource().equals(btnEditCategoria)) {//Ação ao "Editar categoria"
             new EditCategoriaGUI();
-        } else if (actionEvent.getSource().equals(btnEditUsuario)) {
+        } else if (actionEvent.getSource().equals(btnEditUsuario)) {//Ação ao "Editar usuário"
             new EditUsuarioGUI();
-        } else if (actionEvent.getSource().equals(btnEditEmprestimo)) {
+        } else if (actionEvent.getSource().equals(btnEditEmprestimo)) {//Ação ao "Editar empréstimo"
             new EditEmprestimoGUI();
-        } else if (actionEvent.getSource().equals(btnConfirmaDevolucao)) {
+        } else if (actionEvent.getSource().equals(btnConfirmaDevolucao)) {//Ação ao "Confirmar devolução"
             new DevolucaoGUI();
-        } else if (actionEvent.getSource().equals(btnConfirmaEmprestimo)) {
+        } else if (actionEvent.getSource().equals(btnConfirmaEmprestimo)) {//Ação ao "Confirmar empréstimo"
             new ConfirmaEmprestimoGUI();
-        } else if (actionEvent.getSource().equals(btnPegarLivroDeVolta)) {
+        } else if (actionEvent.getSource().equals(btnPegarLivroDeVolta)) {//Ação ao "Devolver livro que emprestaram a biblioteca"
             new RetirarLivroGUI();
         }
     }
-
+    //INÍCIO - Construtor de AdminGUI
     public AdminGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
-
+        
         // Configura o painel principal
         panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção de elementos da tela
         btnEditUsuario = new JButton("Editar usuario");
         btnEditUsuario.setBounds(220, 10, 200, 50);
         btnEditUsuario.addActionListener(this);
@@ -75,5 +80,6 @@ public class AdminGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
-    }
+        //FIM - Instanciação e inserção de elementos da tela
+    }//FIM - Construtor de AdminGUI
 }
