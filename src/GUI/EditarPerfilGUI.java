@@ -13,12 +13,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Random;
 
+//JDialog para editar perfil
 public class EditarPerfilGUI extends JDialog implements ActionListener {
     private JTextField txtOldPassword, txtNewPassword, txtFoto;
     private JButton btnConfirmar, btnCancelar, btnFoto;
     private Usuario usuario;
 
-    private boolean confirmaSenha(String password) {
+    private boolean confirmaSenha(String password) {//Método de validação de senha
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         Usuario curUsuario = conexaoBanco.getUsuario(usuario.getUsername(), password);
@@ -29,12 +30,12 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnConfirmar)) {
+        if (actionEvent.getSource().equals(btnConfirmar)) {//Ação ao "Confirmar"
             String oldPass = txtOldPassword.getText();
             String newPass = txtNewPassword.getText();
             String newFoto = txtFoto.getText();
 
-            if (oldPass == null || oldPass.equals("") || !confirmaSenha(oldPass)) {
+            if (oldPass == null || oldPass.equals("") || !confirmaSenha(oldPass)) {//validação da senha antiga
                 JOptionPane.showMessageDialog(this,
                         "Insira sua senha anterior para editar!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -61,14 +62,14 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
                     "Usuario nao editado", "Aviso", JOptionPane.WARNING_MESSAGE);
             }
 
-        } else if (actionEvent.getSource().equals(btnCancelar)) {
+        } else if (actionEvent.getSource().equals(btnCancelar)) {//Ação ao "Cancelar"
             txtOldPassword.setText("");
             txtNewPassword.setText("");
             txtFoto.setText("");
 
             this.setVisible(false);
             this.dispose();
-        } else if (actionEvent.getSource().equals(btnFoto)) {
+        } else if (actionEvent.getSource().equals(btnFoto)) {//Ação ao "+ Foto"
             JFileChooser fc = new JFileChooser();
             fc.resetChoosableFileFilters();
             fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
@@ -77,11 +78,11 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {
+                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {//validação da extensão da imagem
                     JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
 
-                try {
+                try {//validação do caminho do arquivo da imagem
                     String outName = "./images/" + new Random().nextInt() + file.getName();
 
                     File output = new File(outName);
@@ -96,8 +97,10 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
             }
         }
     }
-
+    
+    //INÍCIO - Construtor de EditarPerfilGUI
     public EditarPerfilGUI(Usuario usuario) {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -105,7 +108,9 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
         this.setModal(true);
 
         JPanel panMain = new JPanel(new GridLayout(0, 1));
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção de itens da janela  
         txtOldPassword = new JTextField();
         panMain.add(txtOldPassword);
 
@@ -129,5 +134,6 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
-    }
+        //FIM - Instanciação e inserção de itens da janela
+    }//FIM - Construtor de EditarPerfilGUI
 }
