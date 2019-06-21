@@ -11,28 +11,30 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+//JDialog para busca de livros
 public class BuscaLivroGUI extends JDialog implements ActionListener {
     private Usuario usuario;
 
     private JTextField txtBusca;
     private JButton btnBuscar, btnReservar;
     private JComboBox cmbLivros;
-
-    private void updateComboLivros() {
+    
+    
+    private void updateComboLivros() {//Método para buscar os livros
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
-        ArrayList<Livro> livros = conexaoBanco.getLivros(txtBusca.getText());
+        ArrayList<Livro> livros = conexaoBanco.getLivros(txtBusca.getText());//todos os livros encontrados
         conexaoBanco.disconnect();
 
-        cmbLivros.removeAllItems();
-        for (Livro livro : livros) {
+        cmbLivros.removeAllItems();//remoção dos livros encontrados em buscas anteriores
+        for (Livro livro : livros) {//exibição dos livros encontrados
             cmbLivros.addItem(livro);
         }
     }
 
-    private void reservarLivro() {
+    private void reservarLivro() {//Método para reservar livro selecionado
         Livro livro = (Livro) cmbLivros.getSelectedItem();
-        if (livro == null) {
+        if (livro == null) {//validação do livro
             JOptionPane.showMessageDialog(this, "Selecione um livro valido", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -41,7 +43,7 @@ public class BuscaLivroGUI extends JDialog implements ActionListener {
         conexaoBanco.connect();
         ArrayList<Disponibilidade> disponibilidades = conexaoBanco.getDisponibilidades(livro);
 
-        if (disponibilidades.isEmpty()) {
+        if (disponibilidades.isEmpty()) {//verificação de disṕonibilidade do livro
             JOptionPane.showMessageDialog(this, "Livro nao disponivel!", "Erro", JOptionPane.ERROR_MESSAGE);
             conexaoBanco.disconnect();
             return;
@@ -65,7 +67,7 @@ public class BuscaLivroGUI extends JDialog implements ActionListener {
 
         java.sql.Date dataEntrega = new java.sql.Date(cal.getTime().getTime());
 
-        if (conexaoBanco.emprestarLivro(disponibilidade, usuario, dataEntrega)) {
+        if (conexaoBanco.emprestarLivro(disponibilidade, usuario, dataEntrega)) {//Exibição de confirmação do empréstimo
             JOptionPane.showMessageDialog(this, "Livro emprestado!\nPasse na biblioteca para pegar seu livro :)", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
             this.dispose();
@@ -79,22 +81,26 @@ public class BuscaLivroGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnBuscar)) {
+        if (actionEvent.getSource().equals(btnBuscar)) {//Ação ao "Buscar"
             updateComboLivros();
-        } else if (actionEvent.getSource().equals(btnReservar)) {
+        } else if (actionEvent.getSource().equals(btnReservar)) {//Ação ao "Reservar"
             reservarLivro();
         }
     }
-
+    
+    //INÍCIO - Construtor de BuscaLivroGUI
     public BuscaLivroGUI(Usuario usuario) {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.usuario = usuario;
         this.setModal(true);
-
+        
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção dos itens da janela    
         txtBusca = new JTextField();
         txtBusca.setBounds(10, 10, 200, 40);
         panMain.add(txtBusca);
@@ -116,5 +122,7 @@ public class BuscaLivroGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
+        //FIM - Instanciação e inserção dos itens da janela  
     }
+     //INÍCIO - Construtor de BuscaLivroGUI
 }
