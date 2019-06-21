@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
 
 //JDialog para editar perfil
@@ -82,10 +84,14 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
 
-                try {//validação do caminho do arquivo da imagem
-                    String outName = "./images/" + new Random().nextInt() + file.getName();
+                try {
+                    if (!new File("images").exists()) {
+                        new File("images").mkdirs();
+                    }
 
+                    String outName = Paths.get("").toAbsolutePath().toString() + "/images/" + new Random().nextInt() + file.getName();
                     File output = new File(outName);
+
                     if (!Files.exists(output.toPath())) {
                         Files.copy(file.toPath(), output.toPath());
                     }

@@ -6,6 +6,7 @@ import javax.xml.catalog.Catalog;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -43,10 +44,21 @@ public class ConexaoBanco {
 
     public ConexaoBanco() {
         con = null;
-        usuario = "fakhoury";
-        senha = "fakhoury";
         drive = "org.postgresql.Driver";
-        url = "jdbc:postgresql://localhost:5432/face_a_book";
+
+        File input = new File(Paths.get("").toAbsolutePath().toString() + "/DataInfo.txt");
+        Scanner scanner;
+        try {
+            scanner = new Scanner(input);
+
+            usuario = scanner.nextLine();
+            senha = scanner.nextLine();
+            url = scanner.nextLine();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco.\n" +
+                    "Verifique se o arquivo DataInfo.txt foi criado.");
+            System.exit(1);
+        }
     }
 
     public boolean testConnection() {
@@ -603,8 +615,6 @@ public class ConexaoBanco {
         try {
             pstmt = con.prepareStatement(fsql);
 
-            System.out.println(categoria);
-
             pstmt.setString(1, categoria.getNome());
             pstmt.setInt(2, categoria.getId());
 
@@ -747,7 +757,7 @@ public class ConexaoBanco {
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            JOptionPane.showMessageDialog(null, "File not found");
             return;
         }
 
