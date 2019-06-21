@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -156,9 +157,13 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
                 }
 
                 try {
-                    String outName = "./images/" + new Random().nextInt() + file.getName();
+                    if (!new File("images").exists()) {
+                        new File("images").mkdirs();
+                    }
 
+                    String outName = Paths.get("").toAbsolutePath().toString() + "/images/" + new Random().nextInt() + file.getName();
                     File output = new File(outName);
+
                     if (!Files.exists(output.toPath())) {
                         Files.copy(file.toPath(), output.toPath());
                     }

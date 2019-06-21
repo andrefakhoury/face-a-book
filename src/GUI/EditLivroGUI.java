@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -59,7 +61,6 @@ public class EditLivroGUI extends JDialog implements ActionListener {
                 for (int i = 0; i < cmbLivroCat.getItemCount(); i++) {
                     if (((Categoria) cmbLivroCat.getItemAt(i)).getId() == livro.getCategoria().getId()) {
                         cmbLivroCat.setSelectedIndex(i);
-                        System.out.println(i);
                         break;
                     }
                 }
@@ -169,9 +170,13 @@ public class EditLivroGUI extends JDialog implements ActionListener {
                 }
 
                 try {
-                    String outName = "./images/" + new Random().nextInt() + file.hashCode() + file.getName();
+                    if (!new File("images").exists()) {
+                        new File("images").mkdirs();
+                    }
 
+                    String outName = Paths.get("").toAbsolutePath().toString() + "/images/" + new Random().nextInt() + file.getName();
                     File output = new File(outName);
+
                     if (!Files.exists(output.toPath())) {
                         Files.copy(file.toPath(), output.toPath());
                     }

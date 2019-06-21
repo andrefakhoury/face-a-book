@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class EditarPerfilGUI extends JDialog implements ActionListener {
@@ -82,9 +84,13 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
                 }
 
                 try {
-                    String outName = "./images/" + new Random().nextInt() + file.getName();
+                    if (!new File("images").exists()) {
+                        new File("images").mkdirs();
+                    }
 
+                    String outName = Paths.get("").toAbsolutePath().toString() + "/images/" + new Random().nextInt() + file.getName();
                     File output = new File(outName);
+
                     if (!Files.exists(output.toPath())) {
                         Files.copy(file.toPath(), output.toPath());
                     }
