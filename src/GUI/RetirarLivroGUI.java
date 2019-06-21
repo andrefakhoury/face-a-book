@@ -8,13 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+//JDialog para retirada de livro
 public class RetirarLivroGUI extends JDialog implements ActionListener {
     private JComboBox cmbDisponibilidades;
     private JButton btnConfirmar;
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnConfirmar)) {
+        if (actionEvent.getSource().equals(btnConfirmar)) {//Ação ao "Confirmar"
             Disponibilidade disponibilidade = (Disponibilidade) cmbDisponibilidades.getSelectedItem();
             if (disponibilidade == null) {
                 JOptionPane.showMessageDialog(this, "Selecione uma disponibilidade", "ERRO", JOptionPane.ERROR_MESSAGE);
@@ -23,7 +24,7 @@ public class RetirarLivroGUI extends JDialog implements ActionListener {
 
             ConexaoBanco conexaoBanco = new ConexaoBanco();
             conexaoBanco.connect();
-            if (conexaoBanco.removerDisponibilidade(disponibilidade)) {
+            if (conexaoBanco.removerDisponibilidade(disponibilidade)) {//retirada do livro selecionado
                 JOptionPane.showMessageDialog(this, "Retirado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.setVisible(false);
                 this.dispose();
@@ -33,15 +34,19 @@ public class RetirarLivroGUI extends JDialog implements ActionListener {
             conexaoBanco.disconnect();
         }
     }
-
+    
+    //INÍCIO - Construtor de RetirarLivroGUI
     public RetirarLivroGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção de itens da janela
         cmbDisponibilidades = new JComboBox();
         cmbDisponibilidades.setBounds(10, 10, 200, 50);
         panMain.add(cmbDisponibilidades);
@@ -62,5 +67,6 @@ public class RetirarLivroGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
-    }
+        //FIM - Instanciação e inserção de itens da janela
+    }//FIM - Construtor de RetirarLivroGUI
 }
