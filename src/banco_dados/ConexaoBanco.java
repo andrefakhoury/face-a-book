@@ -18,6 +18,10 @@ import java.math.*;
 
 import content.*;
 
+
+/**
+ * Classe que faz a conecção com o banco de dados
+ */
 public class ConexaoBanco {
     private String url, usuario, senha, drive;
     private Connection con;
@@ -25,6 +29,9 @@ public class ConexaoBanco {
     private PreparedStatement pstmt;
     private Statement stmt;
 
+    /**
+     * Cria uma conecção com o banco de dados
+     */
     public void connect() {
         try {
             Class.forName(drive);
@@ -33,7 +40,9 @@ public class ConexaoBanco {
             JOptionPane.showMessageDialog(null, "Erro na conexão: "+ ex);
         }
     }
-
+    /**
+     * Desconecta do banco de dados
+     */
     public void disconnect() {
         try {
             con.close();
@@ -41,7 +50,10 @@ public class ConexaoBanco {
             JOptionPane.showMessageDialog(null, "Erro na desconexão: "+ ex);
         }
     }
-
+    
+    /**
+     * Cria uma instancia do banco de dados e conecta com as informaçoes do arquivo de texto DataInfo.txt
+     */
     public ConexaoBanco() {
         con = null;
         drive = "org.postgresql.Driver";
@@ -60,7 +72,11 @@ public class ConexaoBanco {
             System.exit(1);
         }
     }
-
+    
+    /**
+     * Verifica se a conecção esta estabelecida
+     * @return se a conecção esta estabelecida
+     */
     public boolean testConnection() {
         boolean test = true;
 
@@ -76,7 +92,10 @@ public class ConexaoBanco {
 
         return test;
     }
-
+    
+    /**
+     * Classe para testar uma inserção de categpria no banco de dados
+     */
     public void test() {
         String fsql;
 
@@ -96,7 +115,12 @@ public class ConexaoBanco {
             pstmt.close();
         } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro na inclusão da categoria: "+ ex); }
     }
-
+    
+    /**
+     * Função que pega string como parametro e faz md5 dela
+     * @param md5 String a ser criptografada
+     * @return String criptografada com md5
+     */
     public String MD5(String md5) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
@@ -111,6 +135,10 @@ public class ConexaoBanco {
         return null;
     }
 
+    /**
+     * Retorna categorias existentes no banco de dados
+     * @return ArrayList<Categoria> com categorias existentes no banco de dados
+     */
     public ArrayList<Categoria> getCategorias() {
         ArrayList<Categoria> categorias = new ArrayList<>();
 
@@ -129,7 +157,11 @@ public class ConexaoBanco {
 
         return categorias;
     }
-
+    
+    /**
+     * Retorna livros existentes no banco de dados
+     * @return ArrayList<Livro> com livros existentes no banco de dados
+     */
     public ArrayList<Livro> getLivros() {
         ArrayList<Livro> livros = new ArrayList<>();
 
@@ -150,7 +182,12 @@ public class ConexaoBanco {
 
         return livros;
     }
-
+    
+    /**
+     * Busca por livros a partir de uma string com os criterios da busca
+     * @param criterios com criterios de busca dos livros
+     * @return ArrayList<Livro> com livros achados na busca
+     */
     public ArrayList<Livro> getLivros(String criterios) {
         ArrayList<Livro> livros = new ArrayList<>();
 
@@ -175,7 +212,12 @@ public class ConexaoBanco {
 
         return livros;
     }
-
+    
+    /**
+     * Verifica os emprestimos de um usuario
+     * @param usuario - objeto do usuario que deseja pegar os livros
+     * @return ArrayList<Emprestimo> com os emprestimos de um usuario
+     */
     public ArrayList<Emprestimo> getEmprestimos (Usuario usuario) {
         ArrayList<Emprestimo> emprestimos = new ArrayList<>();
 
@@ -213,7 +255,11 @@ public class ConexaoBanco {
 
         return emprestimos;
     }
-
+    
+    /**
+     * Verifica todos os emprestimos da biblioteca
+     * @return ArrayList<Emprestimo> com todos os emprestimos da biblioteca
+     */
     public ArrayList<Emprestimo> getEmprestimos () {
 
         ArrayList<Emprestimo> emprestimos = new ArrayList<>();
@@ -252,6 +298,11 @@ public class ConexaoBanco {
         return emprestimos;
     }
 
+    /**
+     * Verifica as disponibilidades de um usuario
+     * @param usuario - objeto do usuario que deseja buscar pelas disponibilidades
+     * @return ArrayList<Disponibilidade> com as disponibilidades do usuario
+     */
     public ArrayList<Disponibilidade> getDisponibilidades (Usuario usuario) {
         ArrayList<Disponibilidade> disponibilidades = new ArrayList<>();
 
@@ -293,7 +344,11 @@ public class ConexaoBanco {
 
         return disponibilidades;
     }
-
+    
+    /**
+     * Função para retornar todos os usuarios cadastrados no sistema
+     * @return ArrayList<Usuario> com todos os usuarios do sistema
+     */
     public ArrayList<Usuario> getUsuarios () {
         ArrayList<Usuario> usuarios = new ArrayList<>();
 
@@ -322,6 +377,12 @@ public class ConexaoBanco {
         return usuarios;
     }
 
+    /**
+     * Busca usuario no banco de dados
+     * @param username String com nome do usuario
+     * @param password - String com senha do usuario
+     * @return Objeto Usuario com informaçoes do usuario
+     */
     public Usuario getUsuario(String username, String password) {
         Usuario usuario = null;
 
@@ -349,6 +410,11 @@ public class ConexaoBanco {
         return usuario;
     }
 
+    /**
+     * Busca por disponibilidade de um livro
+     * @param livro Objeto Livro que deseja buscar por disponibilidades
+     * @return ArrayList<Disponibilidade> com as disponibilidades de um livro
+     */
     public ArrayList<Disponibilidade> getDisponibilidades(Livro livro) {
         ArrayList<Disponibilidade> disponibilidades = new ArrayList<>();
 
@@ -389,6 +455,10 @@ public class ConexaoBanco {
         return disponibilidades;
     }
 
+    /**
+     * Função que retorna todas as disponibilidades 
+     * @return ArrayList<Disponibilidade> com todas as disponibilidades no banco de dados
+     */
     public ArrayList<Disponibilidade> getDisponibilidades() {
         ArrayList<Disponibilidade> disponibilidades = new ArrayList<>();
 
@@ -430,7 +500,12 @@ public class ConexaoBanco {
 
         return disponibilidades;
     }
-
+    
+    /**
+     * Função para remover uma disponibilidade 
+     * @param disponibilidade Objeto Disponiblidade
+     * @return Se conseguiu remover a disponibilidade ou nao
+     */
     public boolean removerDisponibilidade(Disponibilidade disponibilidade) {
         if (Objects.isNull(disponibilidade)) {
             return false;
@@ -463,6 +538,13 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função que empresta um livro a um usuario
+     * @param disponibilidade Objeto Disponibilidade do livro
+     * @param usuario Objeto Usuario que deseja pergar um emprestimo
+     * @param dataEntrega Date com data final de devolução
+     * @return se o empretimo foi efetuado
+     */
     public boolean emprestarLivro(Disponibilidade disponibilidade, Usuario usuario, Date dataEntrega) {
         if (Objects.isNull(disponibilidade) || Objects.isNull(usuario)) {
             return false;
@@ -485,6 +567,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função que devolve um livro emprestado
+     * @param emprestimo Objeto Emprestimo que representa um emprestimo
+     * @return se conseguiu devolver o livro
+     */
     public boolean devolverLivro(Emprestimo emprestimo) {
         if (Objects.isNull(emprestimo)) {
             return false;
@@ -505,6 +592,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Comfirma um Emprestimo
+     * @param emprestimo Objeto Emprestimo que deseja comfirmar
+     * @return se confirmou o emprestimo
+     */
     public boolean confirmarEmprestimo(Emprestimo emprestimo) {
         if (Objects.isNull(emprestimo)) {
             return false;
@@ -525,6 +617,12 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função que atualiza um usuario
+     * @param usuario Objeto Usuario com o usuario a ser atualizado com as informaçoes novas
+     * @param password String senha do usuario
+     * @return se conseguiu atualizar usuario
+     */
     public boolean updateUsuario(Usuario usuario, String password) {
         if (Objects.isNull(usuario)) {
             return false;
@@ -561,6 +659,12 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função para inserir um usuario no banco de dados
+     * @param usuario Objeto Usuario com usuario a ser inserido
+     * @param password String senha do usuario
+     * @return se conseguiu inserir usuario
+     */
     public boolean insertUsuario(Usuario usuario, String password) {
         if (Objects.isNull(usuario) || Objects.isNull(password)) {
             return false;
@@ -585,6 +689,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função que insere uma categoria
+     * @param categoria Objeto Categoria com a categoria a ser inserida 
+     * @return se conseguiu inserir categoria
+     */
     public boolean insertCategoria(Categoria categoria) {
         if (Objects.isNull(categoria)) {
             return false;
@@ -605,6 +714,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Funçao que atualiza uma categoria
+     * @param categoria Objeto Categoria a ser atualizado com as informaçoes novas
+     * @return se conseguiu atualizar a categoria
+     */
     public boolean updateCategoria(Categoria categoria) {
         if (Objects.isNull(categoria)) {
             return false;
@@ -628,6 +742,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função que atualiza um livro
+     * @param livro Objeto Livro a ser atualizado com as informaçoes novas
+     * @return se livro foi atualizado
+     */
     public boolean updateLivro(Livro livro) {
         if (Objects.isNull(livro)) {
             return false;
@@ -654,6 +773,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função para verificar se existe um emprestimo
+     * @param idDisponibilidade chave inteira para buscar Emprestimo 
+     * @return se existe ou nao
+     */
     public boolean existEmprestimo (int idDisponibilidade) {
         String fsql = "SELECT * FROM emprestimo WHERE id_disponibilidade = ? AND status_emprestimo <> 2";
         boolean exists = false;
@@ -673,6 +797,13 @@ public class ConexaoBanco {
         return exists;
     }
 
+    /**
+     * Função para atualizar uma disponibilidade
+     * @param idDisponibilidade chave inteira pra buscar disponibilidade
+     * @param idLivro chave inteira do livro
+     * @param data Date com nova data
+     * @return
+     */
     public boolean updateDisponibilidade(int idDisponibilidade, int idLivro, Date data) {
         if (Objects.isNull(data)) {
             return false;
@@ -701,6 +832,11 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função para inserir um livro
+     * @param livro Objeto Livro a ser inserido
+     * @return se conseguiu inserir ou nao
+     */
     public boolean insertLivro(Livro livro) {
         if (Objects.isNull(livro)) {
             return false;
@@ -725,6 +861,13 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função inserir disponibilidade
+     * @param idLivro chave inteira do livro
+     * @param idUsuario chave inteira do usuario
+     * @param data Date com data da disponibilidade
+     * @return se conseguiu inserir
+     */
     public boolean insertDisponibilidade(int idLivro, int idUsuario, Date data) {
         if (Objects.isNull(data)) {
             return false;
@@ -748,6 +891,9 @@ public class ConexaoBanco {
         return true;
     }
 
+    /**
+     * Função Que reseta o banco de dados 
+     */
     public void resetDB() {
         String sql = "";
 
