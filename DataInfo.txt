@@ -1,0 +1,3 @@
+fakhoury
+fakhoury
+jdbc:postgresql://localhost:5432/face_a_book
