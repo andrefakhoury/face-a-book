@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
+//JDialog para editar livro
 public class EditLivroGUI extends JDialog implements ActionListener {
 
     private JComboBox cmbLivros;
@@ -24,8 +25,8 @@ public class EditLivroGUI extends JDialog implements ActionListener {
     private JTextField txtLivroId, txtLivroNome, txtLivroAutor, txtLivroFoto;
     private JComboBox cmbLivroCat;
     private JButton btnLivroCategoria, btnFoto;
-
-    private void habilitaTexto(boolean enable) {
+    
+    private void habilitaTexto(boolean enable) {//Método para habilitar/desabilitar botões
         cmbLivros.setEnabled(!enable);
         btnLivroEditar.setEnabled(!enable);
 
@@ -42,7 +43,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         btnLivroCancel.setEnabled(enable);
     }
 
-    private void fillItems(Livro livro) {
+    private void fillItems(Livro livro) {//Método para exibir livro
         updateComboCategoria();
 
         if (livro == null) {
@@ -72,7 +73,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         habilitaTexto(true);
     }
 
-    private void updateComboCategoria() {
+    private void updateComboCategoria() {//Método para exibir lista de categorias
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Categoria> categorias = conexaoBanco.getCategorias();
@@ -83,7 +84,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void updateComboLivros() {
+    private void updateComboLivros() {//Método para exibir lista de livros
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Livro> livros = conexaoBanco.getLivros();
@@ -97,18 +98,18 @@ public class EditLivroGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnLivroEditar)) {
+        if (actionEvent.getSource().equals(btnLivroEditar)) {//Ação ao "Editar"
             if (cmbLivros.getSelectedIndex() == 0) {
                 fillItems(null);
             } else {
                 fillItems((Livro) cmbLivros.getSelectedItem());
             }
-        } else if (actionEvent.getSource().equals(btnLivroClear)) {
+        } else if (actionEvent.getSource().equals(btnLivroClear)) {//Ação ao "Limpar"
             fillItems(null);
-        } else if (actionEvent.getSource().equals(btnLivroCancel)) {
+        } else if (actionEvent.getSource().equals(btnLivroCancel)) {//Ação ao "Cancelar"
             fillItems(null);
             habilitaTexto(false);
-        } else if (actionEvent.getSource().equals(btnLivroAdd)) {
+        } else if (actionEvent.getSource().equals(btnLivroAdd)) {//Ação ao "Confirmar"
             if (txtLivroNome.getText() == null || txtLivroNome.getText().equals("") || cmbLivroCat.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "Campos invalidos!", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -153,10 +154,10 @@ public class EditLivroGUI extends JDialog implements ActionListener {
                 this.dispose();
                 this.setVisible(false);
             }
-        } else if (actionEvent.getSource().equals(btnLivroCategoria)) {
+        } else if (actionEvent.getSource().equals(btnLivroCategoria)) {//Ação ao "Nova categoria"
             new EditCategoriaGUI();
             updateComboCategoria();
-        } else if (actionEvent.getSource().equals(btnFoto)) {
+        } else if (actionEvent.getSource().equals(btnFoto)) {//Ação ao "+ foto"
             JFileChooser fc = new JFileChooser();
             fc.resetChoosableFileFilters();
             fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
@@ -188,15 +189,19 @@ public class EditLivroGUI extends JDialog implements ActionListener {
             }
         }
     }
-
+    
+    //INÍCIO - Construtor de EditLivroGUI
     public EditLivroGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção de itens da janela
         cmbLivros = new JComboBox();
         cmbLivros.setBounds(10, 10, 200, 20);
         panMain.add(cmbLivros);
@@ -262,5 +267,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
+        //INÍCIO - Instanciação e inserção de itens da janela
     }
+    //FIM - Construtor de EditLivroGUI
 }

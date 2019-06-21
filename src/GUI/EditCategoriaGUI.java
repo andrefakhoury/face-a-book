@@ -8,14 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+//JDialog para editar categoria
 public class EditCategoriaGUI extends JDialog implements ActionListener {
 
     private JComboBox cmbCategorias;
 
     private JButton btnCategoriaEditar, btnCategoriaAdd, btnCategoriaClear, btnCategoriaCancel;
     private JTextField txtCategoriaNome, txtCategoriaId;
-
-    private void habilitaTexto(boolean enable) {
+    
+    private void habilitaTexto(boolean enable) {//Método para habilitar/desabilitar botões
         cmbCategorias.setEnabled(!enable);
         btnCategoriaEditar.setEnabled(!enable);
 
@@ -27,7 +28,7 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
         btnCategoriaCancel.setEnabled(enable);
     }
 
-    private void updateComboCategoria() {
+    private void updateComboCategoria() {//Método para exibir lista de categorias
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Categoria> categorias = conexaoBanco.getCategorias();
@@ -39,7 +40,7 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void fillItems(Categoria categoria) {
+    private void fillItems(Categoria categoria) {//Método que exibe categoria
         if (categoria == null) {
             txtCategoriaId.setText("");
             txtCategoriaNome.setText("");
@@ -53,20 +54,20 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnCategoriaEditar)) {
+        if (actionEvent.getSource().equals(btnCategoriaEditar)) {//Ação ao "Editar"
             if (cmbCategorias.getSelectedIndex() == 0) {
                 fillItems(null);
             } else {
                 fillItems((Categoria) cmbCategorias.getSelectedItem());
             }
-        } else if (actionEvent.getSource().equals(btnCategoriaClear)) {
+        } else if (actionEvent.getSource().equals(btnCategoriaClear)) {//Ação ao "Limpar"
             fillItems(null);
-        } else if (actionEvent.getSource().equals(btnCategoriaCancel)) {
+        } else if (actionEvent.getSource().equals(btnCategoriaCancel)) {//Ação ao "Cancelar"
             fillItems(null);
             habilitaTexto(false);
-        } else if (actionEvent.getSource().equals(btnCategoriaAdd)) {
+        } else if (actionEvent.getSource().equals(btnCategoriaAdd)) {//Ação ao Confirmar
 
-            if (txtCategoriaNome.getText().equals("")) {
+            if (txtCategoriaNome.getText().equals("")) {//validação do nome na caixa de texto
                 JOptionPane.showMessageDialog(this, "Nome invalido!", "Falha", JOptionPane.WARNING_MESSAGE);
             } else {
                 String nome = txtCategoriaNome.getText();
@@ -89,7 +90,7 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
                 boolean ok = false;
                 String message = "";
 
-                if (cmbCategorias.getSelectedIndex() == 0) {
+                if (cmbCategorias.getSelectedIndex() == 0) {//confirmação da inserção da categoria
                     ok = conexaoBanco.insertCategoria(categoria);
                     message = "Inserido com sucesso!";
                 } else {
@@ -107,15 +108,19 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
             }
         }
     }
-
+    
+    //INÍCIO - Construtor de EditCategoriaGUI
     public EditCategoriaGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍcio - Instanciação e inserção de itens da janela
         cmbCategorias = new JComboBox();
         cmbCategorias.setBounds(10, 10, 200, 20);
         panMain.add(cmbCategorias);
@@ -155,5 +160,7 @@ public class EditCategoriaGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
+        //FIM - Instanciação e inserção de itens da janela
     }
+    //FIM - Construtor de EditCategoriaGUI
 }

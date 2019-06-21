@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import banco_dados.ConexaoBanco;
 import content.*;
 
+//JFrame para página do usuário
 public class UserGUI extends JFrame implements ActionListener {
     private JButton btnAdmin, btnPegarLivro, btnLogout, btnEditarPerfil;
     private JComboBox cmbLivrosPegos, cmbLivrosEmprestados;
     private JLabel lblInfo, lblBemVindo, lblFoto;
     private Usuario usuario;
 
-    private void updateInformacoes() {
+    private void updateInformacoes() {//Método para atualizar itens da janela após alguma alteração
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         usuario = conexaoBanco.getUsuario(usuario.getUsername(), null);
@@ -29,7 +30,7 @@ public class UserGUI extends JFrame implements ActionListener {
         updateComboLivrosPegos();
     }
 
-    private void updateComboLivrosPegos() {
+    private void updateComboLivrosPegos() {//Método para exibir livros pegos pelo usuário
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Emprestimo> emprestimos = conexaoBanco.getEmprestimos(usuario);
@@ -41,7 +42,7 @@ public class UserGUI extends JFrame implements ActionListener {
         }
     }
 
-    private void updateComboLivrosEmprestados() {
+    private void updateComboLivrosEmprestados() {//Método para exibir livros emprestados pelo usuário
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Disponibilidade> disponibilidades = conexaoBanco.getDisponibilidades(usuario);
@@ -55,23 +56,25 @@ public class UserGUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnPegarLivro)) {
+        if (actionEvent.getSource().equals(btnPegarLivro)) {//Ação ao "Consultar livros"
             BuscaLivroGUI buscaLivroGUI = new BuscaLivroGUI(usuario);
             updateInformacoes();
-        } else if (actionEvent.getSource().equals(btnAdmin)) {
+        } else if (actionEvent.getSource().equals(btnAdmin)) {//Ação ao "Área do Admin"
             new AdminGUI();
             updateInformacoes();
-        } else if (actionEvent.getSource().equals(btnLogout)) {
+        } else if (actionEvent.getSource().equals(btnLogout)) {//Ação ao "Sair"
             this.setVisible(false);
             this.dispose();
             LoginGUI loginGUI = new LoginGUI();
-        } else if (actionEvent.getSource().equals(btnEditarPerfil)) {
+        } else if (actionEvent.getSource().equals(btnEditarPerfil)) {//Ação ao "Editar perfil"
             new EditarPerfilGUI(usuario);
             updateInformacoes();
         }
     }
 
+    //INÍCIO - Construtor de UserGUI
     public UserGUI(Usuario usuario) {
+        //INÍCIO - Configuração da janela
         super("Pagina do usuario");
         this.setSize(920, 720);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -79,7 +82,9 @@ public class UserGUI extends JFrame implements ActionListener {
         this.usuario = usuario;
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Intanciação e inserção de itens da janela
         lblFoto = new JLabel();
         lblFoto.setBounds(700, 10, 200, 230);
         lblFoto.setIcon(new ImageIcon(new ImageIcon(usuario.getFoto()).getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT)));
@@ -129,7 +134,7 @@ public class UserGUI extends JFrame implements ActionListener {
         btnPegarLivro.addActionListener(this);
         panMain.add(btnPegarLivro);
 
-        if (usuario.isAdmin()) {
+        if (usuario.isAdmin()) {//Verificação se usuário é administrador
             btnAdmin = new JButton("Area do Admin");
             btnAdmin.setBounds(700, 555, 200, 50);
             btnAdmin.addActionListener(this);
@@ -143,8 +148,6 @@ public class UserGUI extends JFrame implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
-
-    }
-
-
+        //FIM - Intanciação e inserção de itens da janela
+    }//FIM - Construtor de UserGUI
 }

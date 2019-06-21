@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+//JDialog para editar empréstimo
 public class EditEmprestimoGUI extends JDialog implements ActionListener {
     private JComboBox cmbEmprestimos;
     private JButton btnEmprestimoEditar;
@@ -21,7 +22,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
     private JComboBox cmbEmprestimoLivro, cmbEmprestimoUsuario;
     private JButton btnEmprestimoLivro, btnEmprestimoUsuario;
 
-    private void habilitaTexto(boolean enable) {
+    private void habilitaTexto(boolean enable) {//Método para habilitar/desabilitar botões
         cmbEmprestimos.setEnabled(!enable);
         btnEmprestimoEditar.setEnabled(!enable);
 
@@ -39,7 +40,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
         btnEmprestimoCancel.setEnabled(enable);
     }
 
-    private void updateComboEmprestimos() {
+    private void updateComboEmprestimos() {//Método para exibir lista de empréstimos
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Disponibilidade> disponibilidades = conexaoBanco.getDisponibilidades();
@@ -51,7 +52,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void updateComboLivros() {
+    private void updateComboLivros() {//Método para exibir lista de livros
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Livro> livros = conexaoBanco.getLivros();
@@ -62,7 +63,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void updateComboUsuarios() {
+    private void updateComboUsuarios() {//Método para exibir lista de usuários
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Usuario> usuarios = conexaoBanco.getUsuarios();
@@ -73,8 +74,8 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void fillItems(Disponibilidade disponibilidade) {
-        if (disponibilidade == null) {
+    private void fillItems(Disponibilidade disponibilidade) {//Método para exibir disponibilidade
+        if (disponibilidade == null) {//validação da do parâmetro
             txtEmprestimoId.setText("");
             txtEmprestimoData.setText("01/01/2010");
             cmbEmprestimoLivro.setSelectedIndex(-1);
@@ -87,7 +88,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
 
             String novaData;
 
-            try {
+            try {//validação da data
                 novaData = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US)).format
                         (DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US));
             } catch (Exception ex) {
@@ -117,18 +118,18 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnEmprestimoEditar)) {
+        if (actionEvent.getSource().equals(btnEmprestimoEditar)) {//Ação ao "Editar"
             if (cmbEmprestimos.getSelectedIndex() == 0) {
                 fillItems(null);
             } else {
                 fillItems((Disponibilidade) cmbEmprestimos.getSelectedItem());
             }
-        } else if (actionEvent.getSource().equals(btnEmprestimoClear)) {
+        } else if (actionEvent.getSource().equals(btnEmprestimoClear)) {//Ação ao "Limpar"
             fillItems(null);
-        } else if (actionEvent.getSource().equals(btnEmprestimoCancel)) {
+        } else if (actionEvent.getSource().equals(btnEmprestimoCancel)) {//Ação ao "Cancelar"
             fillItems(null);
             habilitaTexto(false);
-        } else if (actionEvent.getSource().equals(btnEmprestimoAdd)) {
+        } else if (actionEvent.getSource().equals(btnEmprestimoAdd)) {//Ação ao "Confirmar"
 
             Livro livro = (Livro) cmbEmprestimoLivro.getSelectedItem();
             Usuario usuario = null;
@@ -139,7 +140,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
                 id = "0";
             }
 
-            if (livro == null || data == null || data.equals("")) {
+            if (livro == null || data == null || data.equals("")) {//validação dos campos
                 JOptionPane.showMessageDialog(this, "Campos vazios...", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -148,7 +149,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
             int idLivro = livro.getId();
             int idUsuario = 0;
 
-            if (cmbEmprestimos.getSelectedIndex() == 0) {
+            if (cmbEmprestimos.getSelectedIndex() == 0) {//validação dos campos
                 usuario = (Usuario) cmbEmprestimoUsuario.getSelectedItem();
                 if (usuario == null) {
                     JOptionPane.showMessageDialog(this, "Campos vazios...", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -160,7 +161,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
             String novaData;
             java.sql.Date date;
 
-            try {
+            try {//Validação da data
                 novaData = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US)).format
                         (DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US));
                 date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(novaData).getTime());
@@ -178,7 +179,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
 
             String message = "";
 
-            if (cmbEmprestimos.getSelectedIndex() == 0) {
+            if (cmbEmprestimos.getSelectedIndex() == 0) {//Confirmação da inserção/atualização da Disponibilidade
                 ok = conexaoBanco.insertDisponibilidade(idLivro, idUsuario, date);
                 message = "Inserido";
             } else {
@@ -193,23 +194,27 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
                 this.dispose();
                 this.setVisible(false);
             }
-        } else if (actionEvent.getSource().equals(btnEmprestimoLivro)) {
+        } else if (actionEvent.getSource().equals(btnEmprestimoLivro)) {//Ação ao "Novo usuário"
             new EditLivroGUI();
             updateComboLivros();
-        } else if (actionEvent.getSource().equals(btnEmprestimoUsuario)) {
+        } else if (actionEvent.getSource().equals(btnEmprestimoUsuario)) {//Ação ao "Novo livro"
             new EditUsuarioGUI();
             updateComboUsuarios();
         }
     }
-
+    
+    //INÍCIO - Construtor de EditEmprestimoGUI
     public EditEmprestimoGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Intanciação e inserção de itens da janela
         cmbEmprestimos = new JComboBox();
         cmbEmprestimos.setBounds(10, 10, 200, 20);
         panMain.add(cmbEmprestimos);
@@ -269,5 +274,7 @@ public class EditEmprestimoGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
+        //FIM - Intanciação e inserção de itens da janela
     }
+    //FIM - Construtor de EditEmprestimoGUI
 }
