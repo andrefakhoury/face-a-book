@@ -25,13 +25,17 @@ jdbc:postgresql://localhost:5432/face_a_book
 As imagens padrão também precisam ser incluídas no projeto. Para isso, deve-se ter uma pasta “images” no mesmo diretório do projeto com os logos e ícones padrão do sistema. Nesta pasta também serão salvas as outras imagens do sistema.
 
 ## Execução
-    Feito isso, basta executar o arquivo da forma que preferir - pelo jar (no terminal, basta executar o comando `java -jar face_a_book.jar`) ou diretamente pelo código fonte. Por ser desenvolvido em Java, o programa é compatível com praticamente todos os sistemas operacionais mais utilizados. Foi testado previamente no Windows 10 e Linux Mint.
+   
+Feito isso, basta executar o arquivo da forma que preferir - pelo jar (no terminal, basta executar o comando `java -jar face_a_book.jar`) ou diretamente pelo código fonte. Por ser desenvolvido em Java, o programa é compatível com praticamente todos os sistemas operacionais mais utilizados. Foi testado previamente no Windows 10 e Linux Mint.
 
 ## Desenvolvedores
 
 André Luís Mendes Fakhoury - Nº 4482145 
+
 Felipe Guilermmo Santuche Moleiro - Nº 10724010 
+
 Felipe Moreira Neves de Souza - Nº 10734651 
+
 Marcus Vinícius Medeiros Pará - Nº 11031663 
 
 ## Mais informações
