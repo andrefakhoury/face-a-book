@@ -2,10 +2,13 @@ import GUI.*;
 import banco_dados.ConexaoBanco;
 
 import javax.swing.*;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println(new Random().nextInt());
+
         if (new ConexaoBanco().testConnection()) {
             new LoginGUI();
         } else {

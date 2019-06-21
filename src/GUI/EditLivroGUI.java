@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class EditLivroGUI extends JDialog implements ActionListener {
 
@@ -168,7 +169,7 @@ public class EditLivroGUI extends JDialog implements ActionListener {
                 }
 
                 try {
-                    String outName = "./images/" + file.hashCode() + file.getName();
+                    String outName = "./images/" + new Random().nextInt() + file.hashCode() + file.getName();
 
                     File output = new File(outName);
                     if (!Files.exists(output.toPath())) {

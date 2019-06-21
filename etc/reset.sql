@@ -7,9 +7,8 @@ DROP TABLE IF EXISTS categoria;
 
 -- Tabela categoria: representa uma categoria de um livro (aventura, hq...)
 CREATE TABLE categoria (
-	id_categoria SERIAL NOT NULL,
-	nome CHARACTER VARYING(64),
-	CONSTRAINT pkcategoria PRIMARY KEY (id_categoria)
+	id_categoria SERIAL NOT NULL PRIMARY KEY,
+	nome CHARACTER VARYING(64)
 );
 
 -- Tabela livro: representa um livro
@@ -24,8 +23,8 @@ CREATE TABLE livro (
 -- Tabela usuario: representa as informacoes de login e profile de um usuario
 CREATE TABLE usuario (
 	id_usuario SERIAL NOT NULL PRIMARY KEY,
-	username CHARACTER VARYING(64),
-	password CHARACTER VARYING(64),
+	username CHARACTER VARYING(64) NOT NULL,
+	password CHARACTER VARYING(64) NOT NULL,
 	admin BOOLEAN,
 
 	nome CHARACTER VARYING(64),

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Random;
 
 public class EditarPerfilGUI extends JDialog implements ActionListener {
     private JTextField txtOldPassword, txtNewPassword, txtFoto;
@@ -81,7 +82,7 @@ public class EditarPerfilGUI extends JDialog implements ActionListener {
                 }
 
                 try {
-                    String outName = "./images/" + file.hashCode() + file.getName();
+                    String outName = "./images/" + new Random().nextInt() + file.getName();
 
                     File output = new File(outName);
                     if (!Files.exists(output.toPath())) {
