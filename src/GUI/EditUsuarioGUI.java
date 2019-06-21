@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
+//JDialog para editar usuário
 public class EditUsuarioGUI extends JDialog implements ActionListener {
 
     private JComboBox cmbUsuarios;
@@ -23,7 +24,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
     private JButton btnFoto;
     private JCheckBox ckbUserAdmin;
 
-    private void habilitaTexto(boolean enable) {
+    private void habilitaTexto(boolean enable) {//Método para habilitar/desabilitar botões
         cmbUsuarios.setEnabled(!enable);
         btnUserEditar.setEnabled(!enable);
 
@@ -40,7 +41,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
         btnUserCancel.setEnabled(enable);
     }
 
-    public void updateComboUsuarios() {
+    public void updateComboUsuarios() {//Método para exibir lista de usuários
         ConexaoBanco conexaoBanco = new ConexaoBanco();
         conexaoBanco.connect();
         ArrayList<Usuario> usuarios = conexaoBanco.getUsuarios();
@@ -52,7 +53,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
         }
     }
 
-    private void fillItems(Usuario usuario) {
+    private void fillItems(Usuario usuario) {//Método para exibir usuário
         habilitaTexto(true);
 
         if (usuario == null) {
@@ -75,20 +76,20 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(btnUserEditar)) {
+        if (actionEvent.getSource().equals(btnUserEditar)) {//Ação ao "Editar"
             if (cmbUsuarios.getSelectedIndex() == 0) {
                 fillItems(null);
             } else {
                 fillItems((Usuario) cmbUsuarios.getSelectedItem());
             }
-        } else if (actionEvent.getSource().equals(btnUserClear)) {
+        } else if (actionEvent.getSource().equals(btnUserClear)) {//Ação ao "Limpar"
             fillItems(null);
-        } else if (actionEvent.getSource().equals(btnUserCancel)) {
+        } else if (actionEvent.getSource().equals(btnUserCancel)) {//Ação ao "Cancelar"
             fillItems(null);
             habilitaTexto(false);
-        } else if (actionEvent.getSource().equals(btnUserAdd)) {
+        } else if (actionEvent.getSource().equals(btnUserAdd)) {//Ação ao "Confirmar"
 
-            if (txtUserUsername.getText().equals("")) {
+            if (txtUserUsername.getText().equals("")) {//validação do campo
                 JOptionPane.showMessageDialog(this, "Nome de usuario invalido!", "Falha", JOptionPane.WARNING_MESSAGE);
             } else {
                 String user = txtUserUsername.getText();
@@ -97,7 +98,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
                 String nome = txtUserNome.getText();
                 String pass = txtUserPassword.getText();
 
-                if (user == null || user.equals("")) {
+                if (user == null || user.equals("")) {//validação do campo
                     JOptionPane.showMessageDialog(this, "Nome de usuario invalido!", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -119,8 +120,8 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
                 boolean ok = false;
                 String message = "";
 
-                if (cmbUsuarios.getSelectedIndex() == 0) {
-                    if (conexaoBanco.getUsuario(usuario.getUsername(), null) != null) {
+                if (cmbUsuarios.getSelectedIndex() == 0) {//confirmação de inserção/edição
+                    if (conexaoBanco.getUsuario(usuario.getUsername(), null) != null) {//Verificação de existência do usuário
                         JOptionPane.showMessageDialog(this, "Usuario ja cadastrado!", "Erro", JOptionPane.WARNING_MESSAGE);
                         conexaoBanco.disconnect();
                         return;
@@ -135,7 +136,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
 
                 conexaoBanco.disconnect();
 
-                if (ok) {
+                if (ok) {//Confirmação da operação
                     JOptionPane.showMessageDialog(this, message, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                     this.setVisible(false);
@@ -143,7 +144,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Erro", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } else if (actionEvent.getSource().equals(btnFoto)) {
+        } else if (actionEvent.getSource().equals(btnFoto)) {//Ação ao "+ Foto"
             JFileChooser fc = new JFileChooser();
             fc.resetChoosableFileFilters();
             fc.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png"));
@@ -152,7 +153,7 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {
+                if (!file.getName().endsWith(".png") && !file.getName().endsWith(".jpg")) {//validação da extensão da imagem
                     JOptionPane.showMessageDialog(this, "Imagem invalida!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -175,15 +176,19 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
             }
         }
     }
-
+    
+    //INÍCIO - Construtor de EditUsuarioGUI
     public EditUsuarioGUI() {
+        //INÍCIO - Configuração da janela
         this.setSize(920, 720);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setModal(true);
 
         JPanel panMain = new JPanel(null);
-
+        //FIM - Configuração da janela
+        
+        //INÍCIO - Instanciação e inserção de itens da janela
         cmbUsuarios = new JComboBox();
         cmbUsuarios.setBounds(10, 10, 200, 20);
         panMain.add(cmbUsuarios);
@@ -247,5 +252,6 @@ public class EditUsuarioGUI extends JDialog implements ActionListener {
 
         this.add(panMain);
         this.setVisible(true);
-    }
+        //FIM - Instanciação e inserção de itens da janela
+    }//FIM - Construtor de EditUsuarioGUI
 }
